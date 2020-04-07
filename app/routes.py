@@ -136,7 +136,13 @@ def view_course(link):
 @app.route('/manage_course/<course_id>')
 @login_required
 def manage_course(course_id):
-    form = CourseForm()
     course = Course.query.filter_by(id = course_id, author = current_user).first_or_404()
 
     return render_template('manage_course.html', title='Kurs verwalten', course=course)
+
+@app.route('/add_task/<course_id>')
+@login_required
+def add_task(course_id):
+    course = Course.query.filter_by(id = course_id, author = current_user).first_or_404()
+
+    return render_template('add_task.html', title='Aufgabe anlegen', course=course)

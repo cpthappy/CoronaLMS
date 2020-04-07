@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <h1>Aufgabe zu {{course.title}} hinzufügen</h1>
+    
+    <a href="{{url_for('manage_course',course_id=course.id)}}">Zurück zum Kurs</a>
+{% endblock %}
