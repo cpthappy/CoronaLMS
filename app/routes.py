@@ -132,3 +132,11 @@ def view_course(link):
      course = Course.query.filter_by(link = link).first_or_404()
 
      return render_template('view_course.html', course=course)
+
+@app.route('/manage_course/<course_id>')
+@login_required
+def manage_course(course_id):
+    form = CourseForm()
+    course = Course.query.filter_by(id = course_id, author = current_user).first_or_404()
+
+    return render_template('manage_course.html', title='Kurs verwalten', course=course)

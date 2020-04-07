@@ -1,7 +1,7 @@
 <table>
     <tr valign="top">
         <td><img src="{{ course.author.avatar(36) }}"></td>
-        <td>{{ course.title }} <br>{{ course.description }}</td>
+        <td><a href="{{ url_for('manage_course', course_id=course.id) }}">{{ course.title }}</a><br>{{ course.description }}</td>
         <td><a href="{{ url_for('edit_course', course_id=course.id) }}">Bearbeiten</a><br>
         <a href="{{ url_for('delete_course', course_id=course.id) }}" onclick="return confirm('Soll der Kurs wirklich gelöscht werden?');">Löschen</a></td>
     </tr>
