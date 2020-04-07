@@ -17,7 +17,7 @@ def before_request():
 @login_required
 def index():
     courses = Course.query.filter_by(author = current_user)
-    return render_template("index.html", title='Home Page', courses=courses)
+    return render_template("index.html", title='Startseite', courses=courses)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -29,7 +29,7 @@ def login():
         user = User.query.filter_by(username = form.username.data).first()
        
         if user is None or not user.check_password(form.password.data):
-            flash('Invalid username or password')
+            flash('Ungültiger Benutzername oder falsches Passwort')
             return redirect(url_for('login'))
         
         login_user(user, remember=form.remember_me.data)
@@ -38,7 +38,7 @@ def login():
             next_page = url_for('index')
         return redirect(next_page)
         
-    return render_template('login.html', title='Sign In', form=form)
+    return render_template('login.html', title='Login', form=form)
 
 @app.route('/logout')
 def logout():
@@ -55,7 +55,7 @@ def register():
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
-        flash('Congratulations, you are now a registered user!')
+        flash('Herzlichen Glückwunsch, sie sind jetzt ein registrierter Benutzer!')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
@@ -75,13 +75,13 @@ def edit_profile():
         current_user.about_me = form.about_me.data
         current_user.institution = form.institution.data
         db.session.commit()
-        flash('Your changes have been saved.')
+        flash('Ihre Änderungen wurden gespeichert.')
         return redirect(url_for('edit_profile'))
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.about_me.data = current_user.about_me
         form.institution.data = current_user.institution
-    return render_template('edit_profile.html', title='Edit Profile',
+    return render_template('edit_profile.html', title='Profil bearbeiten',
                            form=form)
 
 @app.route('/add_course', methods=['GET', 'POST'])
@@ -95,11 +95,10 @@ def add_course():
         db.session.add(course)
         db.session.commit()
         flash('Kurs ' + title + ' angelegt.')
-        #flash(" ".join([str(x) for x in Course.query.filter_by(author = current_user)]))
         return redirect(url_for('index'))
     elif request.method == 'GET':
         pass
-    return render_template('course.html', title='Add Course', form=form)
+    return render_template('course.html', title='Kurs hinzufügen', form=form)
 
 @app.route('/edit_course/<course_id>', methods=['GET', 'POST'])
 @login_required
@@ -116,10 +115,7 @@ def edit_course(course_id):
     elif request.method == 'GET':
         form.title.data = course.title
         form.description.data = course.description
-    return render_template('course.html', title='Edit Course', form=form, course_id=course_id)
-
-def you_sure():
-    return "Are you sure?"
+    return render_template('course.html', title='Kurs bearbeiten', form=form, course_id=course_id)
 
 @app.route('/delete_course/<course_id>', methods=['GET', 'POST'])
 @login_required

@@ -1,7 +1,7 @@
 {% extends 'bootstrap/base.html' %}
 
 {% block title %}
-    {% if title %}{{ title }} - Corona LMS {% else %}Welcome to Corona LMS{% endif %}
+    {% if title %}{{ title }} - Corona LMS {% else %}Willkommen zu Corona LMS{% endif %}
 {% endblock %}
 
 {% block navbar %}
@@ -24,7 +24,7 @@
                     {% if current_user.is_anonymous %}
                     <li><a href="{{ url_for('login') }}">Login</a></li>
                     {% else %}
-                    <li><a href="{{ url_for('user', username=current_user.username) }}">Profile</a></li>
+                    <li><a href="{{ url_for('user', username=current_user.username) }}">Profil</a></li>
                     <li><a href="{{ url_for('logout') }}">Logout</a></li>
                     {% endif %}
                 </ul>
