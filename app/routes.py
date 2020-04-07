@@ -2,11 +2,9 @@ from datetime import datetime
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
-from app.models import User
+from app.models import User, Course
 from app import app, db
-from app.forms import LoginForm
-from app.forms import RegistrationForm
-from app.forms import EditProfileForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, CourseForm
 
 @app.before_request
 def before_request():
@@ -18,17 +16,8 @@ def before_request():
 @app.route('/index')
 @login_required
 def index():
-    posts = [
-        {
-            'author': {'username': 'John'},
-            'body': 'Beautiful day in Portland!'
-        },
-        {
-            'author': {'username': 'Susan'},
-            'body': 'The Avengers movie was so cool!'
-        }
-    ]
-    return render_template("index.html", title='Home Page', posts=posts)
+    courses = Course.query.filter_by(author = current_user)
+    return render_template("index.html", title='Home Page', courses=courses)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -74,11 +63,8 @@ def register():
 @login_required
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
-    posts = [
-        {'author': user, 'body': 'Test post #1'},
-        {'author': user, 'body': 'Test post #2'}
-    ]
-    return render_template('user.html', user=user, course=posts)
+    courses = Course.query.filter_by(author = user)
+    return render_template('user.html', user=user, course=courses)
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
@@ -97,3 +83,50 @@ def edit_profile():
         form.institution.data = current_user.institution
     return render_template('edit_profile.html', title='Edit Profile',
                            form=form)
+
+@app.route('/add_course', methods=['GET', 'POST'])
+@login_required
+def add_course():
+    form = CourseForm()
+    if form.validate_on_submit():
+        title = form.title.data
+        description = form.description.data
+        course = Course(title = title, description = description, author = current_user)
+        db.session.add(course)
+        db.session.commit()
+        flash('Kurs ' + title + ' angelegt.')
+        #flash(" ".join([str(x) for x in Course.query.filter_by(author = current_user)]))
+        return redirect(url_for('index'))
+    elif request.method == 'GET':
+        pass
+    return render_template('course.html', title='Add Course', form=form)
+
+@app.route('/edit_course/<course_id>', methods=['GET', 'POST'])
+@login_required
+def edit_course(course_id):
+    form = CourseForm()
+    course = Course.query.filter_by(id = course_id, author = current_user).first_or_404()
+
+    if form.validate_on_submit():
+        course.title = form.title.data
+        course.description = form.description.data
+        db.session.commit()
+        flash('Kurs ' + course.title + ' geändert.')
+        return redirect(url_for('index'))
+    elif request.method == 'GET':
+        form.title.data = course.title
+        form.description.data = course.description
+    return render_template('course.html', title='Edit Course', form=form, course_id=course_id)
+
+def you_sure():
+    return "Are you sure?"
+
+@app.route('/delete_course/<course_id>', methods=['GET', 'POST'])
+@login_required
+def delete_course(course_id):
+    course = Course.query.filter_by(id = course_id, author = current_user).first_or_404()
+    title = course.title
+    db.session.delete(course)
+    db.session.commit()
+    flash('Kurs ' + title + ' gelöscht.')
+    return redirect(url_for('index'))
