@@ -4,35 +4,35 @@ from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Le
 from app.models import User
 
 class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
+    username = StringField('Benutzername', validators=[DataRequired()])
+    password = PasswordField('Passwort', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
-    submit = SubmitField('Sign In')
+    submit = SubmitField('Anmelden')
 
 
 class RegistrationForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
+    username = StringField('Benutzername', validators=[DataRequired()])
+    email = StringField('E-Mail', validators=[DataRequired(), Email()])
+    password = PasswordField('Passwort', validators=[DataRequired()])
     password2 = PasswordField(
-        'Repeat Password', validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Register')
+        'Passwort wiederholen', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Registrieren')
 
     def validate_username(self, username):
         user = User.query.filter_by(username=username.data).first()
         if user is not None:
-            raise ValidationError('Please use a different username.')
+            raise ValidationError('Bitte verwenden Sie einen anderen Benutzernamen.')
 
     def validate_email(self, email):
         user = User.query.filter_by(email=email.data).first()
         if user is not None:
-            raise ValidationError('Please use a different email address.')
+            raise ValidationError('Bitte verwenden Sie eine andere E-Mail.')
 
 class EditProfileForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
-    about_me = TextAreaField('About me', validators=[Length(min=0, max=140)])
+    username = StringField('Benutzername', validators=[DataRequired()])
+    about_me = TextAreaField('Über mich', validators=[Length(min=0, max=140)])
     institution = TextAreaField('Insitution', validators = [Length(min=0, max=140)])
-    submit = SubmitField('Submit')
+    submit = SubmitField('Speichern')
 
     def __init__(self, original_username, *args, **kwargs):
         super(EditProfileForm, self).__init__(*args, **kwargs)
@@ -45,6 +45,6 @@ class EditProfileForm(FlaskForm):
                 raise ValidationError('Please use a different username.')
 
 class CourseForm(FlaskForm):
-    title = TextAreaField('Title', validators=[DataRequired(), Length(min=1, max=140)])
-    description = TextAreaField('Description', validators=[Length(min=0, max=500)])
-    submit = SubmitField('Submit')
+    title = TextAreaField('Titel', validators=[DataRequired(), Length(min=1, max=140)])
+    description = TextAreaField('Beschreibung', validators=[Length(min=0, max=500)])
+    submit = SubmitField('Speichern')
