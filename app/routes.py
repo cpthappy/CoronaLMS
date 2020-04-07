@@ -126,3 +126,9 @@ def delete_course(course_id):
     db.session.commit()
     flash('Kurs ' + title + ' gelöscht.')
     return redirect(url_for('index'))
+
+@app.route('/course/<link>')
+def view_course(link):
+     course = Course.query.filter_by(link = link).first_or_404()
+
+     return render_template('view_course.html', course=course)
