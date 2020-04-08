@@ -42,9 +42,20 @@ class Course(db.Model):
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     link = db.Column(db.String(32), default=generate_link, nullable=True)
+    tasks = db.relationship('Task', backref='course', lazy='dynamic')
 
     def __repr__(self):
         return '<Post {}>'.format(self.title)
+
+class Task(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(140), nullable=False)
+    text = db.Column(db.String)
+    due_date = db.Column(db.DateTime)
+    course_id = db.Column(db.Integer, db.ForeignKey('course.id'))
+
+    def __repr__(self):
+        return '<Task {}>'.format(self.title)
 
 @login.user_loader
 def load_user(id):

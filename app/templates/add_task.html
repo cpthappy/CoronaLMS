@@ -1,11 +1,15 @@
 {% extends "base.html" %}
 
-{% block scripts %}
+{% block head %}
     {{ super() }}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
     <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-    
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+
     <script>
         $(function () {
             MathJax.Hub.Config({
@@ -40,12 +44,20 @@
             {% endfor %}
         </p>
         <p>
+            {{ form.due_date.label }}<br>
+            {{ form.due_date() }}<br>
+            {% for error in form.due_date.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
             {{ form.text.label }}<br>
             {{ form.text() }}<br>
             {% for error in form.text.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
+        
         <p>{{ form.submit() }}</p>
     </form>
     <a href="{{url_for('manage_course',course_id=course.id)}}">Zurück zum Kurs</a>

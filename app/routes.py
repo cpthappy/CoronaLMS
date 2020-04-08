@@ -2,7 +2,7 @@ from datetime import datetime
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
-from app.models import User, Course
+from app.models import User, Course, Task
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, CourseForm, TaskForm
 
@@ -147,7 +147,6 @@ def add_task(course_id):
     form = TaskForm()
 
     if form.validate_on_submit():
-        print(form.text.data)
         flash(form.text.data)
         return redirect(url_for('manage_course', course_id=course_id))
     elif request.method == 'GET':
