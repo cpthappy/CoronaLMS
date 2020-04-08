@@ -129,9 +129,9 @@ def delete_course(course_id):
 
 @app.route('/course/<link>')
 def view_course(link):
-     course = Course.query.filter_by(link = link).first_or_404()
-
-     return render_template('view_course.html', course=course)
+    course = Course.query.filter_by(link = link).first_or_404()
+    tasks = Task.query.filter_by(course = course)
+    return render_template('view_course.html', course=course, tasks=tasks)
 
 @app.route('/manage_course/<course_id>')
 @login_required
@@ -147,7 +147,13 @@ def add_task(course_id):
     form = TaskForm()
 
     if form.validate_on_submit():
-        flash(form.text.data)
+        title = form.title.data
+        text = form.text.data
+        due_date = form.due_date.data
+        task = Task(title = title, text = text, course = course)
+        db.session.add(task)
+        db.session.commit()
+        flash('Aufgabe ' + title + ' angelegt.')
         return redirect(url_for('manage_course', course_id=course_id))
     elif request.method == 'GET':
         pass

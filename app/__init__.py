@@ -5,6 +5,8 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_bootstrap import Bootstrap
 from logging.handlers import RotatingFileHandler
+from flaskext.markdown import Markdown
+
 import os
 import logging
 
@@ -15,6 +17,8 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 login = LoginManager(app)
 bootstrap = Bootstrap(app)
+Markdown(app)
+
 
 login.login_view = 'login'
 
