@@ -151,7 +151,7 @@ def add_task(course_id):
         title = form.title.data
         text = form.text.data
         due_date = form.due_date.data
-        task = Task(title = title, text = text, course = course)
+        task = Task(title = title, text = text, due_date = due_date, course = course)
         db.session.add(task)
         db.session.commit()
         flash('Aufgabe ' + title + ' angelegt.')
@@ -171,3 +171,24 @@ def delete_task(course_id, task_id):
     db.session.commit()
     flash('Aufgabe ' + title + ' gelöscht.')
     return redirect(url_for('manage_course', course_id=course_id))
+
+@app.route('/edit_task/<course_id>/<task_id>', methods=['GET', 'POST'])
+@login_required
+def edit_task(course_id, task_id):
+    course = Course.query.filter_by(id = course_id, author = current_user).first_or_404()
+    task = Task.query.filter_by(id=task_id, course=course).first_or_404()
+    form = TaskForm()
+
+    if form.validate_on_submit():
+        task.title = form.title.data
+        task.text = form.text.data
+        task.due_date = form.due_date.data
+        db.session.commit()
+        flash('Aufgabe ' + task.title + ' erfolgreich geändert.')
+        return redirect(url_for('manage_course', course_id=course_id))
+    elif request.method == 'GET':
+        form.title.data = task.title
+        form.text.data = task.text
+        form.due_date.data = task.due_date 
+
+    return render_template('add_task.html', title='Aufgabe anlegen', form=form, course=course)

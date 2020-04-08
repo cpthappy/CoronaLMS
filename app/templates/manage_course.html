@@ -17,7 +17,8 @@
                 {% endif %}
             </td>
             <td>
-              Bearbeiten
+                <a href="{{ url_for('edit_task', course_id=course.id, task_id=task.id) }}">Bearbeiten</a></td>
+            
             </td>
             <td>
                 <a href="{{ url_for('delete_task', course_id=course.id, task_id=task.id) }}" onclick="return confirm('Soll die Aufgabe wirklich gelöscht werden?');">Löschen</a></td>
@@ -26,6 +27,5 @@
         
         
         {% endfor %}
-    </table>
     </table>
 {% endblock %}
