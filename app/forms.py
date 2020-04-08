@@ -48,3 +48,8 @@ class CourseForm(FlaskForm):
     title = TextAreaField('Titel', validators=[DataRequired(), Length(min=1, max=140)])
     description = TextAreaField('Beschreibung', validators=[Length(min=0, max=500)])
     submit = SubmitField('Speichern')
+
+class TaskForm(FlaskForm):
+    title = TextAreaField('Titel', validators=[DataRequired(), Length(min=1, max=140)])
+    text = TextAreaField('Aufgabentext')
+    submit = SubmitField('Speichern')

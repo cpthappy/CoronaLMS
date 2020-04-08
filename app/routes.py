@@ -4,7 +4,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 from app.models import User, Course
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, EditProfileForm, CourseForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, CourseForm, TaskForm
 
 @app.before_request
 def before_request():
@@ -140,9 +140,17 @@ def manage_course(course_id):
 
     return render_template('manage_course.html', title='Kurs verwalten', course=course)
 
-@app.route('/add_task/<course_id>')
+@app.route('/add_task/<course_id>', methods=['GET', 'POST'])
 @login_required
 def add_task(course_id):
     course = Course.query.filter_by(id = course_id, author = current_user).first_or_404()
+    form = TaskForm()
 
-    return render_template('add_task.html', title='Aufgabe anlegen', course=course)
+    if form.validate_on_submit():
+        print(form.text.data)
+        flash(form.text.data)
+        return redirect(url_for('manage_course', course_id=course_id))
+    elif request.method == 'GET':
+        pass
+
+    return render_template('add_task.html', title='Aufgabe anlegen', form=form, course=course)
