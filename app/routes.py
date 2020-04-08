@@ -117,7 +117,7 @@ def edit_course(course_id):
         form.description.data = course.description
     return render_template('course.html', title='Kurs bearbeiten', form=form, course_id=course_id)
 
-@app.route('/delete_course/<course_id>', methods=['GET', 'POST'])
+@app.route('/delete_course/<course_id>')
 @login_required
 def delete_course(course_id):
     course = Course.query.filter_by(id = course_id, author = current_user).first_or_404()
@@ -137,8 +137,9 @@ def view_course(link):
 @login_required
 def manage_course(course_id):
     course = Course.query.filter_by(id = course_id, author = current_user).first_or_404()
+    tasks = Task.query.filter_by(course = course)
 
-    return render_template('manage_course.html', title='Kurs verwalten', course=course)
+    return render_template('manage_course.html', title='Kurs verwalten', course=course, tasks=tasks)
 
 @app.route('/add_task/<course_id>', methods=['GET', 'POST'])
 @login_required
@@ -159,3 +160,14 @@ def add_task(course_id):
         pass
 
     return render_template('add_task.html', title='Aufgabe anlegen', form=form, course=course)
+
+@app.route('/delete_task/<course_id>/<task_id>')
+@login_required
+def delete_task(course_id, task_id):
+    course = Course.query.filter_by(id = course_id, author = current_user).first_or_404()
+    task = Task.query.filter_by(id = task_id, course=course).first_or_404()
+    title = task.title
+    db.session.delete(task)
+    db.session.commit()
+    flash('Aufgabe ' + title + ' gelöscht.')
+    return redirect(url_for('manage_course', course_id=course_id))

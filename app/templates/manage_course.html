@@ -5,4 +5,27 @@
     <p>{{course.description}}</p>
     <a href="{{url_for('index')}}">Zurück</a>
     <a href="{{url_for('add_task',course_id=course.id)}}">Aufgabe hinzufügen</a>
+    <table class="table">
+        {% for task in tasks %}
+        <tr>
+            <th>
+                {{task.title}}
+            </th>
+            <td>
+                {% if task.due_date %}
+                    {{task.due_date}}
+                {% endif %}
+            </td>
+            <td>
+              Bearbeiten
+            </td>
+            <td>
+                <a href="{{ url_for('delete_task', course_id=course.id, task_id=task.id) }}" onclick="return confirm('Soll die Aufgabe wirklich gelöscht werden?');">Löschen</a></td>
+            </td>
+        </tr>
+        
+        
+        {% endfor %}
+    </table>
+    </table>
 {% endblock %}
