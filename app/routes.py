@@ -184,6 +184,17 @@ def delete_task(course_id, task_id):
     flash('Aufgabe ' + title + ' gelöscht.')
     return redirect(url_for('manage_course', course_id=course_id))
 
+@app.route('/close_task/<course_id>/<task_id>')
+@login_required
+def close_task(course_id, task_id):
+    course = Course.query.filter_by(id = course_id, author = current_user).first_or_404()
+    task = Task.query.filter_by(id = task_id, course=course).first_or_404()
+    title = task.title
+    task.is_done = True
+    db.session.commit()
+    flash('Aufgabe ' + title + ' als abgeschlossen markiert.')
+    return redirect(url_for('manage_course', course_id=course_id))
+
 @app.route('/edit_task/<course_id>/<task_id>', methods=['GET', 'POST'])
 @login_required
 def edit_task(course_id, task_id):
