@@ -4,15 +4,24 @@ from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 from app.models import User, Course, Task, Student
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, EditProfileForm, CourseForm, TaskForm,AddStudentForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, CourseForm, TaskForm,AddStudentForm, StudentForm
 import os
 import uuid
+import babel
 
 @app.before_request
 def before_request():
     if current_user.is_authenticated:
         current_user.last_seen = datetime.utcnow()
         db.session.commit()
+
+@app.template_filter('datetime')
+def format_datetime(value, format='medium'):
+    if format == 'full':
+        format="EEEE, d. MMMM y 'at' HH:mm"
+    elif format == 'medium':
+        format="EE dd.MM.y"
+    return babel.dates.format_datetime(value, format)
 
 @app.route('/')
 @app.route('/index')
@@ -240,9 +249,19 @@ def delete_student(course_id, student_id):
     flash('Teilnehmer  gelöscht.')
     return redirect(url_for('students', course_id=course_id))
 
-@app.route('/work/<student_alias>')
+@app.route('/work/<student_alias>', methods=['GET', 'POST'])
 def work(student_alias):
+    form = StudentForm()
     student = Student.query.filter_by(alias= student_alias).first_or_404()
     course = Course.query.filter_by(id = student.course_id).first_or_404()
-    tasks = Task.query.filter_by(course = course)
-    return render_template('view_course_student.html', course=course, tasks=tasks, student = student)
+    tasks = Task.query.filter_by(course = course).order_by("due_date")
+
+    if form.validate_on_submit():
+        student.email = form.email.data
+        student.name = form.name.data
+        db.session.commit()
+    else:
+        form.email.data = student.email
+        form.name.data = student.name
+
+    return render_template('view_course_student.html', course=course, tasks=tasks, student = student, form=form)

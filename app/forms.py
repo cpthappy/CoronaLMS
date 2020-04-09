@@ -61,3 +61,8 @@ class TaskForm(FlaskForm):
 class AddStudentForm(FlaskForm):
     number = SelectField('Anzahl', choices=[(x,x) for x in range(1,31)], default=1, coerce=int)
     submit = SubmitField('Anlegen')
+
+class StudentForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired(), Length(min=1, max=64)])
+    email = StringField('E-Mail', validators=[DataRequired(), Email()])
+    submit = SubmitField('Ändern')
