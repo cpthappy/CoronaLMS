@@ -15,14 +15,14 @@
         </p>
         <p>{{ form.submit() }}</p>
     </form>
-
+    <a href="{{url_for('manage_course',course_id=course.id)}}">Zurück</a>
     <table class="table">
         {% for student in students %}
             <tr>
-                <th>student.alias</th>
-                <td>student.name</td>
-                <td>student.email</td>
-                <td>Löschen</td>
+                <th>{{ student.name }}</th>
+                <td>{{ student.alias }}</td>
+                <td>{% if student.email %}{{ student.email }}{% endif %}</td>
+                <td><a href="{{url_for('delete_student', course_id=course.id, student_id=student.id)}}">Löschen</a></td>
             </tr>
         {% endfor %}
     </table>

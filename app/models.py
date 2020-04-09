@@ -7,6 +7,7 @@ from app import login
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
 
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
@@ -65,11 +66,13 @@ class Student(db.Model):
     name = db.Column(db.String(64), nullable=True)
     alias = db.Column(db.String(32))
     email = db.Column(db.String(64), nullable=True)
-
+    #last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'))
 
     def __repr__(self):
         return '<Student {}>'.format(self.title)
+
+
 
 
 @login.user_loader

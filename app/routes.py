@@ -5,6 +5,8 @@ from werkzeug.urls import url_parse
 from app.models import User, Course, Task, Student
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, CourseForm, TaskForm,AddStudentForm
+import os
+import uuid
 
 @app.before_request
 def before_request():
@@ -195,6 +197,27 @@ def edit_task(course_id, task_id):
 
     return render_template('add_task.html', title='Aufgabe anlegen', form=form, course=course)
 
+
+def add_students(number, course):
+    aliases = [s.alias for s in Student.query.all()]
+    names = [s.name for s in Student.query.all()]
+    counter = 0
+    for i in range(number):
+        alias = ''
+        name = ''
+
+        while alias == '' or alias in aliases:
+            alias = str(uuid.uuid4())[:8]
+        aliases.append(alias)
+        while name == '' or name in names:
+            counter += 1
+            name = "Teilnehmer_%0d" % (counter)
+        names.append(name)
+        
+        student = Student(alias = alias, course= course, name = name)
+        db.session.add(student)
+    db.session.commit()
+
 @app.route('/students/<course_id>', methods=['GET', 'POST'])
 @login_required
 def students(course_id):
@@ -203,5 +226,16 @@ def students(course_id):
     students = Student.query.filter_by(course = course)
 
     if form.validate_on_submit():
-        flash(form.number.data)
+        add_students(form.number.data, course)
+        flash(str(form.number.data) + ' neue Teilnehmer angelegt.')
     return render_template('students.html', title='Teilnehmer verwalten', form=form, course=course, students=students)
+
+@app.route('/delete_student/<course_id>/<student_id>')
+@login_required
+def delete_student(course_id, student_id):
+    course = Course.query.filter_by(id = course_id, author = current_user).first_or_404()
+    student = Student.query.filter_by(id = student_id, course=course).first_or_404()
+    db.session.delete(student)
+    db.session.commit()
+    flash('Teilnehmer  gelöscht.')
+    return redirect(url_for('students', course_id=course_id))
