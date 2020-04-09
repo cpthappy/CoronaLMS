@@ -213,7 +213,7 @@ def add_students(number, course):
             counter += 1
             name = "Teilnehmer_%0d" % (counter)
         names.append(name)
-        
+
         student = Student(alias = alias, course= course, name = name)
         db.session.add(student)
     db.session.commit()
@@ -239,3 +239,10 @@ def delete_student(course_id, student_id):
     db.session.commit()
     flash('Teilnehmer  gelöscht.')
     return redirect(url_for('students', course_id=course_id))
+
+@app.route('/work/<student_alias>')
+def work(student_alias):
+    student = Student.query.filter_by(alias= student_alias).first_or_404()
+    course = Course.query.filter_by(id = student.course_id).first_or_404()
+    tasks = Task.query.filter_by(course = course)
+    return render_template('view_course_student.html', course=course, tasks=tasks, student = student)
