@@ -2,9 +2,9 @@ from datetime import datetime
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
-from app.models import User, Course, Task
+from app.models import User, Course, Task, Student
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, EditProfileForm, CourseForm, TaskForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, CourseForm, TaskForm,AddStudentForm
 
 @app.before_request
 def before_request():
@@ -151,7 +151,8 @@ def add_task(course_id):
         title = form.title.data
         text = form.text.data
         due_date = form.due_date.data
-        task = Task(title = title, text = text, due_date = due_date, course = course)
+        max_score = form.max_score.data
+        task = Task(title = title, text = text, due_date = due_date, course = course, max_score = max_score)
         db.session.add(task)
         db.session.commit()
         flash('Aufgabe ' + title + ' angelegt.')
@@ -183,6 +184,7 @@ def edit_task(course_id, task_id):
         task.title = form.title.data
         task.text = form.text.data
         task.due_date = form.due_date.data
+        task.max_score = form.max_score.data
         db.session.commit()
         flash('Aufgabe ' + task.title + ' erfolgreich geändert.')
         return redirect(url_for('manage_course', course_id=course_id))
@@ -192,3 +194,14 @@ def edit_task(course_id, task_id):
         form.due_date.data = task.due_date 
 
     return render_template('add_task.html', title='Aufgabe anlegen', form=form, course=course)
+
+@app.route('/students/<course_id>', methods=['GET', 'POST'])
+@login_required
+def students(course_id):
+    form = AddStudentForm()
+    course = Course.query.filter_by(id = course_id, author = current_user).first_or_404()
+    students = Student.query.filter_by(course = course)
+
+    if form.validate_on_submit():
+        flash(form.number.data)
+    return render_template('students.html', title='Teilnehmer verwalten', form=form, course=course, students=students)

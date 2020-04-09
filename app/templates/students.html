@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+    <h1>{{ title }} - {{course.title}}</h1>
+
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.number.label }}<br>
+            {{ form.number() }}<br>
+            {% for error in form.number.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+
+    <table class="table">
+        {% for student in students %}
+            <tr>
+                <th>student.alias</th>
+                <td>student.name</td>
+                <td>student.email</td>
+                <td>Löschen</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+   
+{% endblock %}

@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, TextField, SelectField
 from flask_pagedown.fields import PageDownField
 from wtforms.fields.html5 import DateField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length, Optional
@@ -55,4 +55,9 @@ class TaskForm(FlaskForm):
     title = TextAreaField('Titel', validators=[DataRequired(), Length(min=1, max=140)])
     text = TextAreaField('Aufgabentext')
     due_date = DateField('Abgabedatum', validators=[Optional()])
+    max_score = TextField('Maximale Punktzahl', validators=[Optional()])
     submit = SubmitField('Speichern')
+
+class AddStudentForm(FlaskForm):
+    number = SelectField('Anzahl', choices=[(x,x) for x in range(1,31)], default=1, coerce=int)
+    submit = SubmitField('Anlegen')

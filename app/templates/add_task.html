@@ -51,6 +51,13 @@
             {% endfor %}
         </p>
         <p>
+            {{ form.max_score.label }}<br>
+            {{ form.max_score() }}<br>
+            {% for error in form.max_score.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
             {{ form.text.label }}<br>
             {{ form.text() }}<br>
             {% for error in form.text.errors %}
