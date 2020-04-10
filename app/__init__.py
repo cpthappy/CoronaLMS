@@ -6,6 +6,7 @@ from flask_login import LoginManager
 from flask_bootstrap import Bootstrap
 from logging.handlers import RotatingFileHandler
 from flaskext.markdown import Markdown
+from flask_fontawesome import FontAwesome
 
 import os
 import logging
@@ -18,6 +19,7 @@ migrate = Migrate(app, db)
 login = LoginManager(app)
 bootstrap = Bootstrap(app)
 Markdown(app)
+fa = FontAwesome(app)
 
 
 login.login_view = 'login'

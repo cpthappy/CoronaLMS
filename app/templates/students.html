@@ -22,6 +22,7 @@
                 <th>{{ student.name }}</th>
                 <td>{{ student.alias }}</td>
                 <td>{% if student.email %}{{ student.email }}{% endif %}</td>
+                <td>{{ student.last_seen }}</td>
                 <td><a href="{{url_for('delete_student', course_id=course.id, student_id=student.id)}}">Löschen</a></td>
             </tr>
         {% endfor %}

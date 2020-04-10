@@ -66,7 +66,7 @@ class Student(db.Model):
     name = db.Column(db.String(64), nullable=True)
     alias = db.Column(db.String(32))
     email = db.Column(db.String(64), nullable=True)
-    #last_seen = db.Column(db.DateTime, default=datetime.utcnow)
+    last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'))
 
     def __repr__(self):

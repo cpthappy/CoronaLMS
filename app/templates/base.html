@@ -1,4 +1,8 @@
 {% extends 'bootstrap/base.html' %}
+{% block head %}
+    {{ super() }}
+    {{ fontawesome_html() }}
+{% endblock %}
 
 {% block title %}
     {% if title %}{{ title }} - Corona LMS {% else %}Willkommen zu Corona LMS{% endif %}

@@ -148,7 +148,7 @@ def view_course(link):
 @login_required
 def manage_course(course_id):
     course = Course.query.filter_by(id = course_id, author = current_user).first_or_404()
-    tasks = Task.query.filter_by(course = course)
+    tasks = Task.query.filter_by(course = course).order_by('due_date')
 
     return render_template('manage_course.html', title='Kurs verwalten', course=course, tasks=tasks)
 

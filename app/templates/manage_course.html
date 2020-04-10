@@ -1,36 +1,63 @@
 {% extends "base.html" %}
 
+{% block scripts %}
+    {{ super() }}
+    <link href="jumbotron.css" rel="stylesheet">
+{% endblock %}
+
+
 {% block app_content %}
-    <h1>{{course.title}} verwalten</h1>
-    <p>{{course.description}}</p>
-    <a href="{{url_for('index')}}">Zurück</a>&nbsp;
-    <a href="{{url_for('add_task',course_id=course.id)}}">Aufgabe hinzufügen</a>&nbsp;
-    <a href="{{url_for('students', course_id=course.id)}}">Teilnehmer</a>
-    <table class="table">
-        {% for task in tasks %}
-        <tr>
-            <th>
-                {{task.title}}
-            </th>
-            <td>
-                {% if task.due_date %}
-                    {{task.due_date}}
-                {% endif %}
-            </td>
-            <td>
-                <a href="{{ url_for('edit_task', course_id=course.id, task_id=task.id) }}">Bearbeiten</a></td>
-            </td>
-            <td>
-                {% if not task.is_done %}
-                 <a href="{{ url_for('close_task', course_id=course.id, task_id=task.id) }}">Schließen</a></td>
-                {% endif %}
-            </td>
-            <td>
-                <a href="{{ url_for('delete_task', course_id=course.id, task_id=task.id) }}" onclick="return confirm('Soll die Aufgabe wirklich gelöscht werden?');">Löschen</a></td>
-            </td>
-        </tr>
-        
-        
-        {% endfor %}
-    </table>
+    <div class="jumbotron">
+        <div class="container">
+            <h2 class="display-3">{{course.title}}</h2>
+            <p>{{course.description}}</p>
+        </div>
+    </div>
+    <div class="container">
+        <a href="{{url_for('index')}}"><span class="fas fa-arrow-left" style="font-size:18pt"></span></a>&nbsp;
+        <a href="{{url_for('add_task',course_id=course.id)}}"><i class="fas fa-plus-square" style="font-size:18pt"></i></a>&nbsp;
+        <a href="{{url_for('students', course_id=course.id)}}"><span class="fas fa-user-cog" style="font-size:18pt"></span></a>
+    </div>
+    <div class="container">
+        <table class="table">
+            <tr>
+                <th>Aufgabe</th>
+                <th>Abgabedatum</th>
+                <th>Maximale Punktzahl</th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+            {% for task in tasks %}
+            <tr>
+                <th>
+                    {{task.title}}
+                </th>
+                <td>
+                    {% if task.due_date %}
+                        {{task.due_date | datetime}}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if task.max_score %}
+                        {{task.max_score}}
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ url_for('edit_task', course_id=course.id, task_id=task.id) }}"><span class="fas fa-edit" style="font-size:18pt"></span></a></td>
+                </td>
+                <td>
+                    {% if not task.is_done %}
+                    <a href="{{ url_for('close_task', course_id=course.id, task_id=task.id) }}"><span class="fas fa-check-square" style="font-size:18pt"></span></a></td>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ url_for('delete_task', course_id=course.id, task_id=task.id) }}" onclick="return confirm('Soll die Aufgabe wirklich gelöscht werden?');"><span class="fas fa-trash-alt" style="font-size:18pt"></span></a></td>
+                </td>
+            </tr>
+            
+            
+            {% endfor %}
+        </table>
+    </div>
 {% endblock %}
