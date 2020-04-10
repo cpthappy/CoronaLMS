@@ -1,16 +1,10 @@
 {% extends "base.html" %}
 
-{% block scripts %}
-    {{ super() }}
-    <link href="jumbotron.css" rel="stylesheet">
-{% endblock %}
-
-
 {% block app_content %}
     <div class="jumbotron">
         <div class="container">
             <h2 class="display-3">{{course.title}}</h2>
-            <p>{{course.description}}</p>
+            <p>{{course.description | truncate(140)}}</p>
         </div>
     </div>
     <div class="container">

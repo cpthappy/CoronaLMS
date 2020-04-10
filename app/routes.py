@@ -266,6 +266,8 @@ def work(student_alias):
     student = Student.query.filter_by(alias= student_alias).first_or_404()
     course = Course.query.filter_by(id = student.course_id).first_or_404()
     tasks = Task.query.filter_by(course = course).order_by("due_date")
+    student.last_seen = datetime.utcnow()
+    db.session.commit()
 
     if form.validate_on_submit():
         student.email = form.email.data
