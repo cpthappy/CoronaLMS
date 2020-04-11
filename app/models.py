@@ -76,7 +76,7 @@ class Student(db.Model):
 
 class Submission(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    filename = db.Column8db.String(256), nullable=False)
+    filename = db.Column(db.String(256), nullable=False)
     task_id = db.Column(db.Integer, db.ForeignKey('task.id'))
     student_id = db.Column(db.Integer, db.ForeignKey('student.id'))
 
