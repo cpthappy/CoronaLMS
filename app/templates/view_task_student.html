@@ -1,71 +1,162 @@
 {% extends "base.html" %}
 
 {% block head %}
-    {{ super() }}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
-    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+{{ super() }}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 {% endblock %}
 
 {% block scripts %}
-    {{ super() }}
+{{ super() }}
+<script>
+    $(function () {
+        MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [
+                    ["$", "$"],
+                    ["\\(", "\\)"]
+                ]
+            }
+        });
 
-    <script>
-        $(function () {
-            MathJax.Hub.Config({
-                tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
-            });
-            
-            var QUEUE = MathJax.Hub.queue;
-            var simplemde = new SimpleMDE({
-                element: document.getElementById("text"),
-                spellChecker: false,
-                previewRender: function(plainText) {
-                    var preview = document.getElementsByClassName("editor-preview-side")[0];
-                    preview.innerHTML = this.parent.markdown(plainText);
-                    preview.setAttribute('id','editor-preview')
-                    MathJax.Hub.Queue(["Typeset",MathJax.Hub,"editor-preview"]);
-                    return preview.innerHTML;
-                },
-            });
-        })
-    </script>
+        var QUEUE = MathJax.Hub.queue;
+        var simplemde = new SimpleMDE({
+            element: document.getElementById("text"),
+            spellChecker: false,
+            previewRender: function (plainText) {
+                var preview = document.getElementsByClassName("editor-preview-side")[0];
+                preview.innerHTML = this.parent.markdown(plainText);
+                preview.setAttribute('id', 'editor-preview')
+                MathJax.Hub.Queue(["Typeset", MathJax.Hub, "editor-preview"]);
+                return preview.innerHTML;
+            },
+        });
+    })
+</script>
 {% endblock %}
 
 {% block app_content %}
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-4">
-                <h1>{{task.title}}</h1>
+{% for entry in submissions %}
+<div class="modal fade" id="modal{{entry.id}}" tabindex="-1" role="dialog" aria-labelledby="title{{entry.id}}"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="title{{entry.id}}">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            <div claxx="col-lg-4">
-                <h3>{{task.max_score}}</h3>
+            <div class="modal-body">
+                {{entry.filename}}
             </div>
-            <div claxx="col-lg-4">
-                <h3>{{task.due_date | datetime}}</h3>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Schließen</button>
             </div>
         </div>
     </div>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-6">
-                {{task.text | markdown}}
-            </div>
+</div>
+{% endfor %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4">
+            <h1>{{task.title}}</h1>
+        </div>
+        <div claxx="col-lg-4">
+            <h3>{{task.max_score}}</h3>
+        </div>
+        <div claxx="col-lg-4">
+            <h3>{{task.due_date | datetime}}</h3>
         </div>
     </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6">
+            {{task.text | markdown}}
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6">
+            <table class="table">
+                <tr>
+                    <th>Dateiname</th>
+                    <th>Abgegeben am</th>
+                    <th></th>
+                </tr>
+                {% for entry in submissions %}
+                <tr>
+                    <td>
+                        <button type="button" class="btn btn-primary" data-toggle="modal"
+                            data-target="#modal{{entry.id}}">
+                            {{entry.original_name}}
+                        </button>
+                    </td>
+                    <td>{{entry.timestamp}}</td>
+                    {% if not task.is_done %}
+                    <td><a href="{{ url_for('delete_submission', student_alias = student.alias, submission_id=entry.id, task_id=task.id) }}"
+                            onclick="return confirm('Soll die Datei wirklich gelöscht werden?');"><span
+                                class="fas fa-trash-alt" style="font-size:18pt"></span></a></td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
 
-    <form action="" method="POST" enctype="multipart/form-data">
-        {{form.hidden_tag()}}
-        <p>
-            {{ form.file.label }}<br>
-            {{ form.file() }}<br>
-            {% for error in form.file.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        
-        <p>{{ form.submit() }}</p>
-    </form>
-    
-    <a href="{{url_for('work',student_alias=student.alias)}}"><span class="fas fa-arrow-left" style="font-size:18pt"></span></a>
+{% if not task.is_done %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6">
+            <form action="" method="POST" enctype="multipart/form-data">
+                {{form.hidden_tag()}}
+                <p>
+                    {{ form.file.label }}<br>
+                    {{ form.file() }}<br>
+                    {% for error in form.file.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </p>
+
+                <p>{{ form.submit() }}</p>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<a href="{{url_for('work',student_alias=student.alias)}}"><span class="fas fa-arrow-left"
+        style="font-size:18pt"></span></a>
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+    Launch demo modal
+  </button>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}

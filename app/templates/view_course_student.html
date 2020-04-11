@@ -59,10 +59,15 @@
                     <div class="card-body">
                       <p class="card-text">{{ task.text |truncate(140) }}</p>
                       <div class="d-flex justify-content-between align-items-center">
-                        {% if not task.is_done %}
-                          <a href="{{url_for('task', student_alias=student.alias, task_id=task.id)}}">Bearbeiten</a>
                         
-                        {% endif %}
+                          <a href="{{url_for('task', student_alias=student.alias, task_id=task.id)}}">
+                            {% if not task.is_done %}
+                              Bearbeiten
+                            {% else %}
+                              Ansehen
+                            {% endif %}
+                          </a>
+                        
                         <small class="text-muted">
                         {% if task.due_date and not task.is_done%}
                             Abgabedatum {{task.due_date | datetime}}

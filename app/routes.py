@@ -3,7 +3,7 @@ from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 from werkzeug.utils import secure_filename
-from app.models import User, Course, Task, Student
+from app.models import User, Course, Task, Student, Submission
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, CourseForm, TaskForm,AddStudentForm, StudentForm, TaskWorkForm
 import os
@@ -289,11 +289,11 @@ def task(student_alias, task_id):
     form = TaskWorkForm()
     student = Student.query.filter_by(alias= student_alias).first_or_404()
     task = Task.query.filter_by(id=task_id).first_or_404()
-    submissions = Submissions.query.filter_by(id=task_id, student_alias=student_alias)
+    submissions = Submission.query.filter_by(task_id=task.id, student_id=student.id)
     student.last_seen = datetime.utcnow()
     db.session.commit()
 
-    if form.validate_on_submit():
+    if form.validate_on_submit() and not task.is_done:
         if 'file' not in request.files:
             flash('No file part')
             return redirect(request.url)
@@ -302,9 +302,26 @@ def task(student_alias, task_id):
             flash('No selected file')
             return redirect(request.url)
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            flash(filename)
+            original_filename = secure_filename(file.filename)
+            filename, file_extension = os.path.splitext(original_filename)
+            filename = str(uuid.uuid4())
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename + "." + file_extension))
+            submission = Submission(student_id = student.id, task_id =task.id, filename=filename+"."+file_extension, original_name=original_filename)
+            db.session.add(submission)
+            db.session.commit()
+            flash(original_filename + ' gespeichert.')
     else:
         pass
     return render_template('view_task_student.html', task=task, student = student, submissions=submissions, form=form)
+
+@app.route('/delete_submission/<student_alias>/<submission_id>/<task_id>')
+def delete_submission(student_alias, submission_id, task_id):
+    student = Student.query.filter_by(alias = student_alias).first_or_404()
+    submission = Submission.query.filter_by(id = submission_id, student_id=student.id).first_or_404()
+    name = submission.original_name
+    path = os.path.join(app.config['UPLOAD_FOLDER'], submission.filename)
+    os.remove(path)
+    db.session.delete(submission)
+    db.session.commit()
+    flash('Datei ' + name + ' gelöscht.')
+    return redirect(url_for('task', student_alias = student_alias, task_id = task_id))
