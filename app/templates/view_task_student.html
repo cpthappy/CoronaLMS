@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+
+    <script>
+        $(function () {
+            MathJax.Hub.Config({
+                tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+            });
+            
+            var QUEUE = MathJax.Hub.queue;
+            var simplemde = new SimpleMDE({
+                element: document.getElementById("text"),
+                spellChecker: false,
+                previewRender: function(plainText) {
+                    var preview = document.getElementsByClassName("editor-preview-side")[0];
+                    preview.innerHTML = this.parent.markdown(plainText);
+                    preview.setAttribute('id','editor-preview')
+                    MathJax.Hub.Queue(["Typeset",MathJax.Hub,"editor-preview"]);
+                    return preview.innerHTML;
+                },
+            });
+        })
+    </script>
+{% endblock %}
+
+{% block app_content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4">
+                <h1>{{task.title}}</h1>
+            </div>
+            <div claxx="col-lg-4">
+                <h3>{{task.max_score}}</h3>
+            </div>
+            <div claxx="col-lg-4">
+                <h3>{{task.due_date | datetime}}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                {{task.text | markdown}}
+            </div>
+        </div>
+    </div>
+
+    <form action="" method="POST" enctype="multipart/form-data">
+        {{form.hidden_tag()}}
+        <p>
+            {{ form.file.label }}<br>
+            {{ form.file() }}<br>
+            {% for error in form.file.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        
+        <p>{{ form.submit() }}</p>
+    </form>
+    
+    <a href="{{url_for('work',student_alias=student.alias)}}"><span class="fas fa-arrow-left" style="font-size:18pt"></span></a>
+{% endblock %}

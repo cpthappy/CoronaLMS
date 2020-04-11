@@ -2,12 +2,17 @@ from datetime import datetime
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
+from werkzeug.utils import secure_filename
 from app.models import User, Course, Task, Student
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, EditProfileForm, CourseForm, TaskForm,AddStudentForm, StudentForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, CourseForm, TaskForm,AddStudentForm, StudentForm, TaskWorkForm
 import os
 import uuid
 import babel
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
 @app.before_request
 def before_request():
@@ -278,3 +283,28 @@ def work(student_alias):
         form.name.data = student.name
 
     return render_template('view_course_student.html', course=course, tasks=tasks, student = student, form=form)
+
+@app.route('/task/<student_alias>/<task_id>', methods=['GET', 'POST'])
+def task(student_alias, task_id):
+    form = TaskWorkForm()
+    student = Student.query.filter_by(alias= student_alias).first_or_404()
+    task = Task.query.filter_by(id=task_id).first_or_404()
+    submissions = Submissions.query.filter_by(id=task_id, student_alias=student_alias)
+    student.last_seen = datetime.utcnow()
+    db.session.commit()
+
+    if form.validate_on_submit():
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            flash(filename)
+    else:
+        pass
+    return render_template('view_task_student.html', task=task, student = student, submissions=submissions, form=form)

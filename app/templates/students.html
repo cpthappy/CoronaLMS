@@ -17,13 +17,20 @@
     </form>
     <a href="{{url_for('manage_course',course_id=course.id)}}">Zurück</a>
     <table class="table">
+        <tr>
+            <th>Name</th>
+            <th>Alias</th>
+            <th>E-Mail</th>
+            <th>Letzte Aktiviät</th>
+            <th></th>
+        </tr>
         {% for student in students %}
             <tr>
                 <th>{{ student.name }}</th>
                 <td>{{ student.alias }}</td>
                 <td>{% if student.email %}{{ student.email }}{% endif %}</td>
                 <td>{{ student.last_seen }}</td>
-                <td><a href="{{url_for('delete_student', course_id=course.id, student_id=student.id)}}">Löschen</a></td>
+                <td><a href="{{url_for('delete_student', course_id=course.id, student_id=student.id)}}"><span class="fas fa-trash-alt" style="font-size:18pt"></span></a></td>
             </tr>
         {% endfor %}
     </table>

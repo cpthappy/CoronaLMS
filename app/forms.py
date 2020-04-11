@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, TextField, SelectField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, TextField, SelectField, FileField
 from flask_pagedown.fields import PageDownField
 from wtforms.fields.html5 import DateField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length, Optional
@@ -66,3 +66,7 @@ class StudentForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired(), Length(min=1, max=64)])
     email = StringField('E-Mail', validators=[DataRequired(), Email()])
     submit = SubmitField('Ändern')
+
+class TaskWorkForm(FlaskForm):
+    file = FileField('Lösung')
+    submit = SubmitField('Hochladen')

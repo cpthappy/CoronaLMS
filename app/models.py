@@ -57,6 +57,7 @@ class Task(db.Model):
     max_score = db.Column(db.Integer, nullable=True)
     is_done = db.Column(db.Boolean, default=False)
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'))
+    submissions = db.relationship('Submission', backref='task', lazy='dynamic')
 
     def __repr__(self):
         return '<Task {}>'.format(self.title)
@@ -68,11 +69,16 @@ class Student(db.Model):
     email = db.Column(db.String(64), nullable=True)
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'))
+    submissions = db.relationship('Submission', backref='student', lazy='dynamic')
 
     def __repr__(self):
         return '<Student {}>'.format(self.title)
 
-
+class Submission(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    filename = db.Column8db.String(256), nullable=False)
+    task_id = db.Column(db.Integer, db.ForeignKey('task.id'))
+    student_id = db.Column(db.Integer, db.ForeignKey('student.id'))
 
 
 @login.user_loader
