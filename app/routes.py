@@ -6,6 +6,7 @@ from werkzeug.utils import secure_filename
 from app.models import User, Course, Task, Student, Submission, Feedback
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, CourseForm, TaskForm,AddStudentForm, StudentForm, TaskWorkForm
+from collections import Counter
 import os
 import uuid
 import babel
@@ -155,9 +156,20 @@ def manage_course(course_id):
     course = Course.query.filter_by(id = course_id, author = current_user).first_or_404()
     tasks = Task.query.filter_by(course = course).order_by('due_date')
     submissions = Submission.query.with_entities(Submission.task_id, Submission.student_id).\
-        filter(Submission.task_id.in_([x.id for x in tasks])).distinct() 
+        filter(Submission.task_id.in_([x.id for x in tasks])).distinct()
 
-    return render_template('manage_course.html', title='Kurs verwalten', course=course, tasks=tasks, submissions=submissions)
+    submission_count = Counter()
+    for task_id, student_id in submissions:
+        submission_count[task_id] += 1 
+
+    student_count = Student.query.filter_by(course = course).count()
+
+    return render_template('manage_course.html', 
+                            title='Kurs verwalten', 
+                            course=course, 
+                            tasks=tasks, 
+                            submissions=submission_count,
+                            student_count=student_count)
 
 @app.route('/add_task/<course_id>', methods=['GET', 'POST'])
 @login_required

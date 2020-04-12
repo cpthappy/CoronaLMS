@@ -18,6 +18,9 @@
                 <th>Aufgabe</th>
                 <th>Abgabedatum</th>
                 <th>Maximale Punktzahl</th>
+                <th>Fehlende Abgaben</th>
+                <th>Abgaben zur Bewertung</th>
+                <th>Bewertete Abgaben</th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -38,6 +41,15 @@
                     {% endif %}
                 </td>
                 <td>
+                    {{student_count-submissions[task.id]}}
+                </td>
+                <td>
+                    {{submissions[task.id]}}
+                </td>
+                <td>
+                    
+                </td>
+                <td>
                     <a href="{{ url_for('edit_task', course_id=course.id, task_id=task.id) }}"><span class="fas fa-edit" style="font-size:18pt"></span></a></td>
                 </td>
                 <td>
@@ -54,7 +66,5 @@
             {% endfor %}
         </table>
     </div>
-    {% for entry in submissions %}
-        {{entry.student_id}} {{entry.task_id}}<br> 
-    {% endfor %}
+   {{submissions}}
 {% endblock %}
