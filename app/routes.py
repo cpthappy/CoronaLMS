@@ -3,7 +3,7 @@ from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 from werkzeug.utils import secure_filename
-from app.models import User, Course, Task, Student, Submission
+from app.models import User, Course, Task, Student, Submission, Feedback
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, CourseForm, TaskForm,AddStudentForm, StudentForm, TaskWorkForm
 import os
@@ -154,8 +154,10 @@ def view_course(link):
 def manage_course(course_id):
     course = Course.query.filter_by(id = course_id, author = current_user).first_or_404()
     tasks = Task.query.filter_by(course = course).order_by('due_date')
+    submissions = Submission.query.with_entities(Submission.task_id, Submission.student_id).\
+        filter(Submission.task_id.in_([x.id for x in tasks])).distinct() 
 
-    return render_template('manage_course.html', title='Kurs verwalten', course=course, tasks=tasks)
+    return render_template('manage_course.html', title='Kurs verwalten', course=course, tasks=tasks, submissions=submissions)
 
 @app.route('/add_task/<course_id>', methods=['GET', 'POST'])
 @login_required

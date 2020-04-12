@@ -1,5 +1,5 @@
 from app import app, db
-from app.models import User, Course, Task, Student, Submission
+from app.models import User, Course, Task, Student, Submission, Feedback
 
 @app.shell_context_processor
 def make_shell_context():
@@ -8,4 +8,5 @@ def make_shell_context():
     'Course': Course, 
     'Task': Task, 
     'Student':Student,
-    'Submission':Submission}
+    'Submission':Submission,
+    'Feedback':Feedback}

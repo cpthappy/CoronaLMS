@@ -58,6 +58,7 @@ class Task(db.Model):
     is_done = db.Column(db.Boolean, default=False)
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'))
     submissions = db.relationship('Submission', backref='task', lazy='dynamic')
+    scores = db.relationship('Feedback', backref='task', lazy='dynamic')
 
     def __repr__(self):
         return '<Task {}>'.format(self.title)
@@ -70,6 +71,7 @@ class Student(db.Model):
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'))
     submissions = db.relationship('Submission', backref='student', lazy='dynamic')
+    scores = db.relationship('Feedback', backref='student', lazy='dynamic')
 
     def __repr__(self):
         return '<Student {}>'.format(self.title)
@@ -81,6 +83,15 @@ class Submission(db.Model):
     task_id = db.Column(db.Integer, db.ForeignKey('task.id'))
     student_id = db.Column(db.Integer, db.ForeignKey('student.id'))
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+class Feedback(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    task_id = db.Column(db.Integer, db.ForeignKey('task.id'))
+    student_id = db.Column(db.Integer, db.ForeignKey('student.id'))
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    text = db.Column(db.String)
+    score = db.Column(db.Integer)
+
 
 @login.user_loader
 def load_user(id):

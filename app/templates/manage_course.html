@@ -54,4 +54,7 @@
             {% endfor %}
         </table>
     </div>
+    {% for entry in submissions %}
+        {{entry.student_id}} {{entry.task_id}}<br> 
+    {% endfor %}
 {% endblock %}
