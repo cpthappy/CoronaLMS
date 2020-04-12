@@ -41,10 +41,10 @@
                     {% endif %}
                 </td>
                 <td>
-                    {{student_count-submissions[task.id]}}
+                    <a href="{{ url_for('missing_submissions', course_id=course.id, task_id=task.id) }}">{{student_count-submissions[task.id]}}</a>
                 </td>
                 <td>
-                    {{submissions[task.id]}}
+                    <a href="{{ url_for('feedback_submissions', course_id=course.id, task_id=task.id) }}">{{submissions[task.id]}}</a>
                 </td>
                 <td>
                     

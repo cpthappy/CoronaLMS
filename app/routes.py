@@ -339,3 +339,17 @@ def delete_submission(student_alias, submission_id, task_id):
     db.session.commit()
     flash('Datei ' + name + ' gelöscht.')
     return redirect(url_for('task', student_alias = student_alias, task_id = task_id))
+
+@app.route('/missing/<course_id>/<task_id>')
+@login_required
+def missing_submissions(course_id, task_id):
+    course = Course.query.filter_by(id = course_id, author = current_user).first_or_404()
+    task = Task.query.filter_by(id = task_id).first_or_404()
+    return render_template('missing_submissions.html', task=task, course = course)
+
+@app.route('/feedback/<course_id>/<task_id>')
+@login_required
+def feedback_submissions(course_id, task_id):
+    course = Course.query.filter_by(id = course_id, author = current_user).first_or_404()
+    task = Task.query.filter_by(id = task_id).first_or_404()
+    return render_template('feedback_submissions.html', task=task, course = course)

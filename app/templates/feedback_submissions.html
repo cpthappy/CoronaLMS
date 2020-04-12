@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <div class="jumbotron">
+        <div class="container">
+            <h2 class="display-3">Noch nicht bewertete Abgaben {{task.title}}</h2>
+            <p>{{task.text | truncate(140)}}</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <a href="{{url_for('manage_course', course_id=course.id)}}"><span class="fas fa-arrow-left" style="font-size:18pt"></span></a>&nbsp;
+    </div>
+    <div class="container">
+        <table class="table">
+        </table>
+    </div>
+{% endblock %}
