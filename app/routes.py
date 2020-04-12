@@ -345,7 +345,9 @@ def delete_submission(student_alias, submission_id, task_id):
 def missing_submissions(course_id, task_id):
     course = Course.query.filter_by(id = course_id, author = current_user).first_or_404()
     task = Task.query.filter_by(id = task_id).first_or_404()
-    return render_template('missing_submissions.html', task=task, course = course)
+    submissions = Submission.query.filter_by(task_id = task.id).with_entities(Submission.student_id)
+    missing_students = Student.query.filter(~Student.id.in_(submissions))
+    return render_template('missing_submissions.html', task=task, course = course, missing_students=missing_students)
 
 @app.route('/feedback/<course_id>/<task_id>')
 @login_required
