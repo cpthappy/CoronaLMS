@@ -363,13 +363,30 @@ def feedback_submissions(course_id, task_id):
     submissions = Student.query.filter(Student.id.in_(submissions))
     return render_template('feedback_submissions.html', task=task, course = course, submissions=submissions)
 
-@app.route('/provide_feedback/<course_id>/<task_id>/<student_id>')
+@app.route('/provide_feedback/<course_id>/<task_id>/<student_id>', methods=['GET', 'POST'])
 @login_required
 def feedback_student(course_id, task_id, student_id):
     course = Course.query.filter_by(id = course_id, author = current_user).first_or_404()
     task = Task.query.filter_by(id = task_id).first_or_404()
     student = Student.query.filter_by(id=task_id).first_or_404()
     submissions = Submission.query.filter_by(task_id = task.id, student_id=student_id)
+    feedback = Feedback.query.filter_by(task=task, student=student).one_or_none()
     form = FeedbackForm()
-    return render_template('feedback_student.html', form=form, task=task, course = course, student = student, submissions=submissions)
+
+    if form.validate_on_submit():
+        if feedback is None:
+            feedback = Feedback(task_id = task.id, student_id = student.id, text=form.text.data, score=form.score.data)
+            db.session.add(feedback)
+        else:
+            feedback.text = form.text.data
+            feedback.score = max((0,min((form.score.data, task.max_score))))
+            flash(feedback.text)
+        db.session.commit()
+        flash("Feedback gespeichert.")
+    else:
+        if feedback is not None:
+            form.text.data = feedback.text
+            form.score.data = feedback.score
+        
+    return render_template('feedback_student.html', form=form, task=task, course = course, student = student, submissions=submissions, feedback=feedback)
 

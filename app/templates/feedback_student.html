@@ -73,6 +73,7 @@
         </div>
         <div class="col-lg-6 right">
             <form action="" method="POST">
+                {{ form.hidden_tag() }}
                 <p>
                     {{ form.text.label }}<br>
                     {{ form.text() }}<br>
