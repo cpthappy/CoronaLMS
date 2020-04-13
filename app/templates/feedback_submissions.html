@@ -13,6 +13,20 @@
     </div>
     <div class="container">
         <table class="table">
+        <tr>
+            <th>Name</th>
+            <th>Alias</th>
+            <th>Letzte Aktivität</th>
+            <th></th>
+        </tr>
+        {% for student in submissions %}
+            <tr>
+                <td>{{student.name}}</td>
+                <td>{{student.alias}}</td>
+                <td>{{student.last_seen}}</td>
+                <td>Bewertung vornehmen</td>
+            </tr>
+        {% endfor %}
         </table>
-    </div>
+        </div>
 {% endblock %}

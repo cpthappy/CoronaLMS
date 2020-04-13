@@ -354,4 +354,6 @@ def missing_submissions(course_id, task_id):
 def feedback_submissions(course_id, task_id):
     course = Course.query.filter_by(id = course_id, author = current_user).first_or_404()
     task = Task.query.filter_by(id = task_id).first_or_404()
-    return render_template('feedback_submissions.html', task=task, course = course)
+    submissions = Submission.query.filter_by(task_id = task.id).with_entities(Submission.student_id).distinct()
+    submissions = Student.query.filter(Student.id.in_(submissions))
+    return render_template('feedback_submissions.html', task=task, course = course, submissions=submissions)
