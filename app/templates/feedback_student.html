@@ -1,32 +1,96 @@
 {% extends "base.html" %}
 
-{% block app_content %}
-    <div class="jumbotron">
-        <div class="container">
-            <h2 class="display-3">Noch nicht bewertete Abgaben {{task.title}}</h2>
-            <p>{{task.text | truncate(140)}}</p>
-        </div>
-    </div>
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+<script type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+{% endblock %}
 
+{% block scripts %}
+{{ super() }}
+
+<script>
+    $(function () {
+        MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [
+                    ["$", "$"],
+                    ["\\(", "\\)"]
+                ]
+            }
+        });
+
+        var QUEUE = MathJax.Hub.queue;
+        var simplemde = new SimpleMDE({
+            element: document.getElementById("text"),
+            spellChecker: false,
+            previewRender: function (plainText) {
+                var preview = document.getElementsByClassName("editor-preview-side")[0];
+                preview.innerHTML = this.parent.markdown(plainText);
+                preview.setAttribute('id', 'editor-preview')
+                MathJax.Hub.Queue(["Typeset", MathJax.Hub, "editor-preview"]);
+                return preview.innerHTML;
+            },
+        });
+    })
+</script>
+{% endblock %}
+
+{% block app_content %}
+<div class="jumbotron">
     <div class="container">
-        <a href="{{url_for('feedback_submissions', course_id=course.id, task_id=task.id)}}"><span class="fas fa-arrow-left" style="font-size:18pt"></span></a>&nbsp;
+        <h2 class="display-3">{{task.title}}</h2>
+        <p>{{task.text | truncate(140)}}</p>
+        <p>Lösung von {{student.name}}</p>
     </div>
-    <div class="container">
-        <table class="table">
+</div>
+<div class="container">
+    <table class="table">
         <tr>
-            <th>Name</th>
-            <th>Alias</th>
-            <th>Letzte Aktivität</th>
-            <th></th>
+            <th>Dateiname</th>
+            <th>Abgabedatum</th>
         </tr>
-        {% for student in submissions %}
-            <tr>
-                <td>{{student.name}}</td>
-                <td>{{student.alias}}</td>
-                <td>{{student.last_seen}}</td>
-                <td>Bewertung vornehmen</td>
-            </tr>
+        {% for entry in submissions %}
+        <tr>
+            <td>{{entry.original_name}}</td>
+            <td>{{entry.timestamp}}</td>
+        </tr>
         {% endfor %}
-        </table>
+    </table>
+</div>
+<div class="container">
+    <a href="{{url_for('feedback_submissions', course_id=course.id, task_id=task.id)}}"><span class="fas fa-arrow-left"
+            style="font-size:18pt"></span></a>&nbsp;
+</div>
+<div class="container-fluid">
+    <div class="row row-height">
+        <div class="col-lg-6 left">
+            {% for entry in submissions %}
+            <img src="{{url_for('uploaded_file', filename=entry.filename)}}" class = "thumbnail" alt="{{entry.original_name}}"></img>
+            {% endfor %}
         </div>
+        <div class="col-lg-6 right">
+            <form action="" method="POST">
+                <p>
+                    {{ form.text.label }}<br>
+                    {{ form.text() }}<br>
+                    {% for error in form.text.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </p>
+                <p>
+                    {{ form.score.label }}<br>
+                    {{ form.score() }}/{{task.max_score}}<br>
+                    {% for error in form.score.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </p>
+                <p>{{ form.submit() }}</p>
+
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

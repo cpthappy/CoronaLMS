@@ -1,11 +1,11 @@
 from datetime import datetime
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, send_from_directory
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 from werkzeug.utils import secure_filename
 from app.models import User, Course, Task, Student, Submission, Feedback
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, EditProfileForm, CourseForm, TaskForm,AddStudentForm, StudentForm, TaskWorkForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, CourseForm, TaskForm,AddStudentForm, StudentForm, TaskWorkForm, FeedbackForm
 from collections import Counter
 import os
 import uuid
@@ -14,6 +14,11 @@ import babel
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(os.path.join(app.root_path,"..", app.config['UPLOAD_FOLDER']),
+                               filename)
 
 @app.before_request
 def before_request():
@@ -319,8 +324,8 @@ def task(student_alias, task_id):
             original_filename = secure_filename(file.filename)
             filename, file_extension = os.path.splitext(original_filename)
             filename = str(uuid.uuid4())
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename + "." + file_extension))
-            submission = Submission(student_id = student.id, task_id =task.id, filename=filename+"."+file_extension, original_name=original_filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename + file_extension))
+            submission = Submission(student_id = student.id, task_id =task.id, filename=filename+file_extension, original_name=original_filename)
             db.session.add(submission)
             db.session.commit()
             flash(original_filename + ' gespeichert.')
@@ -365,5 +370,6 @@ def feedback_student(course_id, task_id, student_id):
     task = Task.query.filter_by(id = task_id).first_or_404()
     student = Student.query.filter_by(id=task_id).first_or_404()
     submissions = Submission.query.filter_by(task_id = task.id, student_id=student_id)
-    return render_template('feedback_student.html', task=task, course = course, student = student, submissions=submissions)
+    form = FeedbackForm()
+    return render_template('feedback_student.html', form=form, task=task, course = course, student = student, submissions=submissions)
 
