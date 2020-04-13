@@ -9,7 +9,7 @@
     </div>
 
     <div class="container">
-        <a href="{{url_for('manage_course', course_id=course.id)}}"><span class="fas fa-arrow-left" style="font-size:18pt"></span></a>&nbsp;
+        <a href="{{url_for('feedback_submissions', course_id=course.id, task_id=task.id)}}"><span class="fas fa-arrow-left" style="font-size:18pt"></span></a>&nbsp;
     </div>
     <div class="container">
         <table class="table">
@@ -24,7 +24,7 @@
                 <td>{{student.name}}</td>
                 <td>{{student.alias}}</td>
                 <td>{{student.last_seen}}</td>
-                <td><a href="{{url_for('feedback_student', task_id=task.id, course_id=course.id, student_id=student.id)}}">Bewertung vornehmen</a></td>
+                <td>Bewertung vornehmen</td>
             </tr>
         {% endfor %}
         </table>

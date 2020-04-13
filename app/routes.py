@@ -357,3 +357,13 @@ def feedback_submissions(course_id, task_id):
     submissions = Submission.query.filter_by(task_id = task.id).with_entities(Submission.student_id).distinct()
     submissions = Student.query.filter(Student.id.in_(submissions))
     return render_template('feedback_submissions.html', task=task, course = course, submissions=submissions)
+
+@app.route('/provide_feedback/<course_id>/<task_id>/<student_id>')
+@login_required
+def feedback_student(course_id, task_id, student_id):
+    course = Course.query.filter_by(id = course_id, author = current_user).first_or_404()
+    task = Task.query.filter_by(id = task_id).first_or_404()
+    student = Student.query.filter_by(id=task_id).first_or_404()
+    submissions = Submission.query.filter_by(task_id = task.id, student_id=student_id)
+    return render_template('feedback_student.html', task=task, course = course, student = student, submissions=submissions)
+
