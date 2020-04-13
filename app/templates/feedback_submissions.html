@@ -3,7 +3,7 @@
 {% block app_content %}
     <div class="jumbotron">
         <div class="container">
-            <h2 class="display-3">Noch nicht bewertete Abgaben {{task.title}}</h2>
+            <h2 class="display-3">Abgaben zur Bewertung {{task.title}}</h2>
             <p>{{task.text | truncate(140)}}</p>
         </div>
     </div>
@@ -24,7 +24,13 @@
                 <td>{{student.name}}</td>
                 <td>{{student.alias}}</td>
                 <td>{{student.last_seen}}</td>
-                <td><a href="{{url_for('feedback_student', task_id=task.id, course_id=course.id, student_id=student.id)}}">Bewertung vornehmen</a></td>
+                <td><a href="{{url_for('feedback_student', task_id=task.id, course_id=course.id, student_id=student.id)}}">
+                    {% if not feedback[student.id] %}
+                    Bewertung vornehmen
+                    {% else %}
+                    Bewertung ändern
+                    {% endif %}
+                </a></td>
             </tr>
         {% endfor %}
         </table>

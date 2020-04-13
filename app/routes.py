@@ -361,7 +361,9 @@ def feedback_submissions(course_id, task_id):
     task = Task.query.filter_by(id = task_id).first_or_404()
     submissions = Submission.query.filter_by(task_id = task.id).with_entities(Submission.student_id).distinct()
     submissions = Student.query.filter(Student.id.in_(submissions))
-    return render_template('feedback_submissions.html', task=task, course = course, submissions=submissions)
+    feedback = Feedback.query.filter_by(task_id=task.id).with_entities(Submission.student_id).distinct()
+    feedback = Student.query.filter(Student.id.in_(feedback))
+    return render_template('feedback_submissions.html', task=task, course = course, submissions=submissions, feedback=feedback)
 
 @app.route('/provide_feedback/<course_id>/<task_id>/<student_id>', methods=['GET', 'POST'])
 @login_required
