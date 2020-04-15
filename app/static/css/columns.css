@@ -6,8 +6,8 @@
 /*Set up the columns with a 100% height, body color and overflow scroll*/
 
 .thumbnail img {
-  max-height: 100%;
-  max-width: 100%;
+  width: 100%;
+  object-fit: cover;
 }
 
 .left{
@@ -19,7 +19,3 @@
   height: 100%;
   overflow-y: scroll;
 }
-
-.mid{
-  background-color: green;
-  height: 

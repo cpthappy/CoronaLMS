@@ -1,46 +1,47 @@
 {% extends 'bootstrap/base.html' %}
+
+{% block title %}
+{% if title %}{{ title }} - Corona LMS {% else %}Willkommen zu Corona LMS{% endif %}
+{% endblock %}
+
 {% block head %}
-    {{ super() }}
-    {{ fontawesome_html() }}
-    
+{{ super() }}
+{{ fontawesome_html() }}
+
 {% endblock %}
 
 {% block scripts %}
-    {{ super() }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/columns.css') }}">
-    <link href="{{ url_for('static', filename='css/pricing.css') }}" rel="stylesheet">
-{% endblock %}
-
-{% block title %}
-    {% if title %}{{ title }} - Corona LMS {% else %}Willkommen zu Corona LMS{% endif %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/columns.css') }}">
+<link href="{{ url_for('static', filename='css/pricing.css') }}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
-    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
-      <h5 class="my-0 mr-md-auto font-weight-normal">
-        <a class="p-2 text-dark" href="{{ url_for('index') }}">Kursübersicht</a>
-      </h5>
-      <nav class="my-2 my-md-0 mr-md-3">
-        {% if current_user.is_anonymous %}
-          <a class="btn btn-outline-primary" href="{{ url_for('login') }}">Login</a>
-        {% else %}
-          <a class="p-2 text-dark" href="{{ url_for('user', username=current_user.username) }}">Profil</a>
-            <a class="btn btn-outline-primary" href="{{ url_for('logout') }}">Logout</a>
-        {% endif %}
-      </nav>
-    </div>
+<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
+  <h5 class="my-0 mr-md-auto font-weight-normal">
+    <a class="p-2 text-dark" href="{{ url_for('index') }}">Kursübersicht</a>
+  </h5>
+  <nav class="my-2 my-md-0 mr-md-3">
+    {% if current_user.is_anonymous %}
+    <a class="btn btn-outline-primary" href="{{ url_for('login') }}">Login</a>
+    {% else %}
+    <a class="p-2 text-dark" href="{{ url_for('user', username=current_user.username) }}">Profil</a>
+    <a class="btn btn-outline-primary" href="{{ url_for('logout') }}">Logout</a>
+    {% endif %}
+  </nav>
+</div>
 
-    <div class="container">
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages %}
-            <div class="alert alert-info" role="alert">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-        {% endwith %}
+<div class="container">
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-info" role="alert">{{ message }}</div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
 
-        {# application content needs to be provided in the app_content block #}
-        {% block app_content %}{% endblock %}
-    </div>
+  {# application content needs to be provided in the app_content block #}
+  {% block app_content %}{% endblock %}
+</div>
 {% endblock %}

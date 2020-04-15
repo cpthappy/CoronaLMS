@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base_work.html" %}
 
 {% block scripts %}
     {{ super() }}
@@ -13,9 +13,11 @@
 {% endblock %}
 
 {% block app_content %}
+<div class="container">
     <h1>{{course.title}}</h1>
-    <p>{{course.description}}</p>
-
+    <p>{{course.description | markdown}}</p>
+</div>
+<div class="container"></div>
     <table class="table">
         {% for task in tasks %}
         
@@ -24,17 +26,28 @@
                 {{task.title}}
             </th>
             <td>
-                {% if task.due_date %}
-                    {{task.due_date}}
+                {% if task.due_date and not task.is_done%}
+                    {{task.due_date | datetime}}
+                {% endif %}
+            </td>
+            <td>
+                {% if task.max_score and not task.is_done%}
+                    {{task.max_score}}
+                {% endif %}
+            </td>
+            <td>
+                {% if task.is_done %}
+                    <i class="fas fa-check"></i>
+                    {% else %}
+                    <i class="fas fa-spinner"></i>
                 {% endif %}
             </td>
         </tr>
         <tr>
-            <td colspan=2>{{ task.text |markdown }}</td>
-
+            <td colspan=4>{{ task.text |markdown }}</td>
         </tr>
         
         {% endfor %}
     </table>
-    
+</div>
 {% endblock %}

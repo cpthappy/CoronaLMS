@@ -68,7 +68,7 @@ class StudentForm(FlaskForm):
     submit = SubmitField('Ändern')
 
 class TaskWorkForm(FlaskForm):
-    file = FileField('Lösung')
+    file = FileField('Lösung hochladen')
     submit = SubmitField('Hochladen')
 
 class FeedbackForm(FlaskForm):

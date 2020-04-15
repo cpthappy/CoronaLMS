@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base_work.html" %}
 
 {% block head %}
 {{ super() }}
@@ -39,74 +39,71 @@
 
 {% block app_content %}
 <div class="container">
-    <div class="row">
-        <div class="col-lg-4">
-            <h1>{{task.title}}</h1>
-        </div>
-        <div claxx="col-lg-4">
-            <h3>{{task.max_score}}</h3>
-        </div>
-        <div claxx="col-lg-4">
-            <h3>{{task.due_date | datetime}}</h3>
-        </div>
-    </div>
+    <h1>{{task.title}}</h1>
+
+    {% if task.max_score and not task.is_done%}
+        <h6>Maximale Punktzahl {{task.max_score}}</h6>
+    {% endif %}
+
+    {% if task.due_date and not task.is_done%}
+        <h6>Abgabedatum {{task.due_date | datetime}}</h6>
+    {% endif %}
 </div>
 <div class="container">
-    <div class="row">
-        <div class="col-lg-6">
-            {{task.text | markdown}}
-        </div>
-    </div>
+    <a href="{{url_for('work',student_alias=student.alias)}}"><span class="fas fa-arrow-left"
+        style="font-size:18pt"></span></a>
 </div>
 <div class="container">
-    <div class="row">
-        <div class="col-lg-6">
-            <table class="table">
-                <tr>
-                    <th>Dateiname</th>
-                    <th>Abgegeben am</th>
-                    <th></th>
-                </tr>
-                {% for entry in submissions %}
-                <tr>
-                    <td>
-                            {{entry.original_name}}
-                    </td>
-                    <td>{{entry.timestamp}}</td>
-                    {% if not task.is_done %}
-                    <td><a href="{{ url_for('delete_submission', student_alias = student.alias, submission_id=entry.id, task_id=task.id) }}"
-                            onclick="return confirm('Soll die Datei wirklich gelöscht werden?');"><span
-                                class="fas fa-trash-alt" style="font-size:18pt"></span></a></td>
-                    {% endif %}
-                </tr>
-                {% endfor %}
-            </table>
-        </div>
-    </div>
+    {{task.text | markdown}}
+</div>
+
+<div class="container">
+    <table class="table">
+        <tr>
+            <th>Dateiname</th>
+            <th>Abgegeben am</th>
+            <th></th>
+        </tr>
+        {% for entry in submissions %}
+        <tr>
+            <td>
+                <a href="{{url_for('uploaded_file', filename=entry.filename)}}"
+                    target="_blank">{{entry.original_name}}</a>
+            </td>
+            <td>{{entry.timestamp}}</td>
+            {% if not task.is_done %}
+            <td><a href="{{ url_for('delete_submission', student_alias = student.alias, submission_id=entry.id, task_id=task.id) }}"
+                    onclick="return confirm('Soll die Datei wirklich gelöscht werden?');"><span class="fas fa-trash-alt"
+                        style="font-size:18pt"></span></a></td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </table>
 </div>
 
 {% if not task.is_done %}
 <div class="container">
-    <div class="row">
-        <div class="col-lg-6">
-            <form action="" method="POST" enctype="multipart/form-data">
-                {{form.hidden_tag()}}
-                <p>
-                    {{ form.file.label }}<br>
-                    {{ form.file() }}<br>
-                    {% for error in form.file.errors %}
-                    <span style="color: red;">[{{ error }}]</span>
-                    {% endfor %}
-                </p>
+    <p>Die Lösungen für die Aufgabe müssen als Bild hochgeladen werden. Wenn
+    die Lösung aus mehreren Bildern besteht, dann muss jedes Bild einzeln
+    hochgeladen werden.</p>
+    <form action="" method="POST" enctype="multipart/form-data">
+        {{form.hidden_tag()}}
+        <p>
+            {{ form.file.label }}<br>
+            {{ form.file() }}<br>
+            {% for error in form.file.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
 
-                <p>{{ form.submit() }}</p>
-            </form>
-        </div>
-    </div>
+        <p>{{ form.submit() }}</p>
+    </form>
 </div>
 {% endif %}
 
+<div class="container">
 <a href="{{url_for('work',student_alias=student.alias)}}"><span class="fas fa-arrow-left"
         style="font-size:18pt"></span></a>
+</div>
 
 {% endblock %}

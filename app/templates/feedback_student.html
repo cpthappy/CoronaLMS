@@ -64,7 +64,7 @@
             style="font-size:18pt"></span></a>&nbsp;
 </div>
 <div class="container-fluid">
-    <div class="row row-height">
+    <div class="col-lg-6 left">
         {% for entry in submissions %}
         <img src="{{url_for('uploaded_file', filename=entry.filename)}}" class="thumbnail"
             alt="{{entry.original_name}}"></img>
