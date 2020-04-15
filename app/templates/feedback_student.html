@@ -39,13 +39,12 @@
 {% endblock %}
 
 {% block app_content %}
-<div class="jumbotron">
-    <div class="container">
-        <h2 class="display-3">{{task.title}}</h2>
-        <p>{{task.text | truncate(140)}}</p>
-        <p>Lösung von {{student.name}}</p>
-    </div>
+<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <h1 class="display-4">{{task.title}}</h1>
+    <p class="lead">{{task.text | truncate(140)}}</p>
+    <p>Lösung von {{student.name}}</p>
 </div>
+
 <div class="container">
     <table class="table">
         <tr>
@@ -66,32 +65,31 @@
 </div>
 <div class="container-fluid">
     <div class="row row-height">
-        <div class="col-lg-6 left">
-            {% for entry in submissions %}
-            <img src="{{url_for('uploaded_file', filename=entry.filename)}}" class = "thumbnail" alt="{{entry.original_name}}"></img>
-            {% endfor %}
-        </div>
-        <div class="col-lg-6 right">
-            <form action="" method="POST">
-                {{ form.hidden_tag() }}
-                <p>
-                    {{ form.text.label }}<br>
-                    {{ form.text() }}<br>
-                    {% for error in form.text.errors %}
-                    <span style="color: red;">[{{ error }}]</span>
-                    {% endfor %}
-                </p>
-                <p>
-                    {{ form.score.label }}<br>
-                    {{ form.score() }}/{{task.max_score}}<br>
-                    {% for error in form.score.errors %}
-                    <span style="color: red;">[{{ error }}]</span>
-                    {% endfor %}
-                </p>
-                <p>{{ form.submit() }}</p>
+        {% for entry in submissions %}
+        <img src="{{url_for('uploaded_file', filename=entry.filename)}}" class="thumbnail"
+            alt="{{entry.original_name}}"></img>
+        {% endfor %}
+    </div>
+    <div class="col-lg-6 right">
+        <form action="" method="POST">
+            {{ form.hidden_tag() }}
+            <p>
+                {{ form.text.label }}<br>
+                {{ form.text() }}<br>
+                {% for error in form.text.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </p>
+            <p>
+                {{ form.score.label }}<br>
+                {{ form.score() }}/{{task.max_score}}<br>
+                {% for error in form.score.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </p>
+            <p>{{ form.submit() }}</p>
 
-            </form>
-        </div>
+        </form>
     </div>
 </div>
 {% endblock %}

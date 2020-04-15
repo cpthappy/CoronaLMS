@@ -2,20 +2,22 @@
 {% import 'bootstrap/wtf.html' as wtf %}
 
 {% block app_content %}
-    <h1>{{ title }} - {{course.title}}</h1>
+<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <h2 class="display-4">{{ title }} - {{course.title}}</h2>
+</div>
 
+<div class="container">
     <form action="" method="post">
         {{ form.hidden_tag() }}
         <p>
-            {{ form.number.label }}<br>
-            {{ form.number() }}<br>
+            {{ form.number.label }}&nbsp; {{ form.number() }} &nbsp; {{ form.submit() }}<br>
             {% for error in form.number.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
-        <p>{{ form.submit() }}</p>
     </form>
-    <a href="{{url_for('manage_course',course_id=course.id)}}">Zurück</a>
+    <a href="{{url_for('manage_course',course_id=course.id)}}"><span class="fas fa-arrow-left"
+            style="font-size:18pt"></span></a>
     <table class="table">
         <tr>
             <th>Name</th>
@@ -25,15 +27,15 @@
             <th></th>
         </tr>
         {% for student in students %}
-            <tr>
-                <th>{{ student.name }}</th>
-                <td>{{ student.alias }}</td>
-                <td>{% if student.email %}{{ student.email }}{% endif %}</td>
-                <td>{{ student.last_seen }}</td>
-                <td><a href="{{url_for('delete_student', course_id=course.id, student_id=student.id)}}"><span class="fas fa-trash-alt" style="font-size:18pt"></span></a></td>
-            </tr>
+        <tr>
+            <th>{{ student.name }}</th>
+            <td>{{ student.alias }}</td>
+            <td>{% if student.email %}{{ student.email }}{% endif %}</td>
+            <td>{{ student.last_seen }}</td>
+            <td><a href="{{url_for('delete_student', course_id=course.id, student_id=student.id)}}"><span
+                        class="fas fa-trash-alt" style="font-size:18pt"></span></a></td>
+        </tr>
         {% endfor %}
     </table>
-
-   
+</div>
 {% endblock %}

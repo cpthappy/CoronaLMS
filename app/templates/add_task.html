@@ -1,39 +1,48 @@
 {% extends "base.html" %}
 
 {% block head %}
-    {{ super() }}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
-    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+{{ super() }}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+<script type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 {% endblock %}
 
 {% block scripts %}
-    {{ super() }}
+{{ super() }}
 
-    <script>
-        $(function () {
-            MathJax.Hub.Config({
-                tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
-            });
-            
-            var QUEUE = MathJax.Hub.queue;
-            var simplemde = new SimpleMDE({
-                element: document.getElementById("text"),
-                spellChecker: false,
-                previewRender: function(plainText) {
-                    var preview = document.getElementsByClassName("editor-preview-side")[0];
-                    preview.innerHTML = this.parent.markdown(plainText);
-                    preview.setAttribute('id','editor-preview')
-                    MathJax.Hub.Queue(["Typeset",MathJax.Hub,"editor-preview"]);
-                    return preview.innerHTML;
-                },
-            });
-        })
-    </script>
+<script>
+    $(function () {
+        MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [
+                    ["$", "$"],
+                    ["\\(", "\\)"]
+                ]
+            }
+        });
+
+        var QUEUE = MathJax.Hub.queue;
+        var simplemde = new SimpleMDE({
+            element: document.getElementById("text"),
+            spellChecker: false,
+            previewRender: function (plainText) {
+                var preview = document.getElementsByClassName("editor-preview-side")[0];
+                preview.innerHTML = this.parent.markdown(plainText);
+                preview.setAttribute('id', 'editor-preview')
+                MathJax.Hub.Queue(["Typeset", MathJax.Hub, "editor-preview"]);
+                return preview.innerHTML;
+            },
+        });
+    })
+</script>
 {% endblock %}
 
 {% block app_content %}
-    <h1>Aufgabe zu {{course.title}} hinzufügen</h1>
+<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <h2 class="display-4">{{title}}-{{course.title}}</h2>
+</div>
+<div class="container">
     <form action="" method="post">
         {{ form.hidden_tag() }}
         <p>
@@ -64,8 +73,8 @@
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
-        
-        <p>{{ form.submit() }}</p>
+
+        <p>{{ form.submit() }} &nbsp; <a href="{{url_for('manage_course',course_id=course.id)}}">Abbrechen</a></p>
     </form>
-    <a href="{{url_for('manage_course',course_id=course.id)}}">Abbrechen</a>
+</div>
 {% endblock %}

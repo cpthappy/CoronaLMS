@@ -239,7 +239,7 @@ def edit_task(course_id, task_id):
         form.text.data = task.text
         form.due_date.data = task.due_date 
 
-    return render_template('add_task.html', title='Aufgabe anlegen', form=form, course=course)
+    return render_template('add_task.html', title='Aufgabe bearbeiten', form=form, course=course)
 
 
 def add_students(number, course):

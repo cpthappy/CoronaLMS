@@ -2,35 +2,33 @@
 
 {% block app_content %}
 <div class="container">
-    <div class="col-lg-6">
-        <table>
-            <tr valign="top">
-                <td><img src="{{ user.avatar(128) }}"></td>
-                <td>
-                    <h1>Benutzer: {{ user.username }}</h1>
-                </td>
-            </tr>
-            <tr>
-                <td></td>
-                <td>{% if user.institution %}<p>{{ user.institution }}</p>{% endif %}</td>
-            </tr>
-            <tr>
-                <td></td>
-                <td>{% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}</td>
-            </tr>
-            <tr>
-                <td></td>
-                <td>{% if user.last_seen %}<p>Letzte Aktivität am: {{ user.last_seen | datetime }}</p>{% endif %}</td>
-            </tr>
-            <tr>
-                <td></td>
-                <td>{% if user == current_user %}
-                    <p><a href="{{ url_for('edit_profile') }}"><span class="fas fa-edit"
-                                style="font-size:18pt"></span></a></p>
-                    {% endif %}
-                </td>
-            </tr>
-        </table>
-    </div>
+    <table>
+        <tr valign="top">
+            <td><img src="{{ user.avatar(128) }}"></td>
+            <td>
+                <h1>Benutzer: {{ user.username }}</h1>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>{% if user.institution %}<p>{{ user.institution }}</p>{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>{% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>{% if user.last_seen %}<p>Letzte Aktivität am: {{ user.last_seen | datetime }}</p>{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>{% if user == current_user %}
+                <p><a href="{{ url_for('edit_profile') }}"><span class="fas fa-edit" style="font-size:18pt"></span></a>
+                </p>
+                {% endif %}
+            </td>
+        </tr>
+    </table>
 </div>
 {% endblock %}
