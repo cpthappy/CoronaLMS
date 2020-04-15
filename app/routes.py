@@ -290,6 +290,10 @@ def work(student_alias):
     student = Student.query.filter_by(alias= student_alias).first_or_404()
     course = Course.query.filter_by(id = student.course_id).first_or_404()
     tasks = Task.query.filter_by(course = course).order_by("due_date")
+    feedback = Feedback.query.filter_by(student=student)
+    scores = dict()
+    for entry in feedback:
+        scores[entry.task_id] = entry.score
     student.last_seen = datetime.utcnow()
     db.session.commit()
 
@@ -301,7 +305,7 @@ def work(student_alias):
         form.email.data = student.email
         form.name.data = student.name
 
-    return render_template('view_course_student.html', course=course, tasks=tasks, student = student, form=form)
+    return render_template('view_course_student.html', course=course, tasks=tasks, student = student, form=form, scores=scores)
 
 @app.route('/task/<student_alias>/<task_id>', methods=['GET', 'POST'])
 def task(student_alias, task_id):

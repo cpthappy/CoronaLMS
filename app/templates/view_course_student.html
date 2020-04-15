@@ -22,8 +22,9 @@
   <div class="container">
     <div class="row">
       <div class="col-md-4">
-        <div class="card mb-4 shadow-sm">
-          <img class="card-img-top" alt="Persönliche Daten ändern">
+          <div class="card-header text-center">
+          <h2>Persönliche Daten ändern</h2>
+          </div>
           <div class="card-body">
             <form action="" method="post">
               {{ form.hidden_tag() }}
@@ -57,9 +58,11 @@
           </div>
           <div class="card-body">
             <h6 class="card-subtitle mb-2 text-muted">
-              {% if task.max_score and not task.is_done %}
+              {% if task.max_score and not scores[task.id] %}
                 Maximale Punktzahl {{task.max_score}}<br>
-                {% endif %}
+              {% elif scores[task.id] and task.max_score %}
+                Erreichte Punktzahl <b>{{scores[task.id]}}</b> von {{task.max_score}}<br>
+              {% endif %}
                 {% if task.due_date and not task.is_done%}
               Abgabedatum {{task.due_date | datetime}}
               {% endif %}
