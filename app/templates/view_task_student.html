@@ -101,6 +101,17 @@
 </div>
 {% endif %}
 
+{% if feedback %}
+<div class="container">
+    <hr>
+    <h2>Feedback: </h2>
+    <p>{{feedback.text}}</p>
+    {% if task.max_score %}
+    <p>Erreichte Punkte: <b>{{feedback.score}}</b> von {{task.max_score}}</p>
+    {% endif %}
+</div>
+{% endif %}
+
 <div class="container">
 <a href="{{url_for('work',student_alias=student.alias)}}"><span class="fas fa-arrow-left"
         style="font-size:18pt"></span></a>

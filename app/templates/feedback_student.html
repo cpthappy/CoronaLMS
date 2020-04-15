@@ -80,6 +80,7 @@
                 <span style="color: red;">[{{ error }}]</span>
                 {% endfor %}
             </p>
+            {% if task.max_score %}
             <p>
                 {{ form.score.label }}<br>
                 {{ form.score() }}/{{task.max_score}}<br>
@@ -87,6 +88,7 @@
                 <span style="color: red;">[{{ error }}]</span>
                 {% endfor %}
             </p>
+            {% endif %}
             <p>{{ form.submit() }}</p>
 
         </form>

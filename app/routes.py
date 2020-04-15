@@ -309,6 +309,7 @@ def task(student_alias, task_id):
     student = Student.query.filter_by(alias= student_alias).first_or_404()
     task = Task.query.filter_by(id=task_id).first_or_404()
     submissions = Submission.query.filter_by(task_id=task.id, student_id=student.id)
+    feedback = Feedback.query.filter_by(task=task, student=student).one_or_none()
     student.last_seen = datetime.utcnow()
     db.session.commit()
 
@@ -331,7 +332,7 @@ def task(student_alias, task_id):
             flash(original_filename + ' gespeichert.')
     else:
         pass
-    return render_template('view_task_student.html', task=task, student = student, submissions=submissions, form=form)
+    return render_template('view_task_student.html', task=task, student = student, submissions=submissions, form=form, feedback=feedback)
 
 @app.route('/delete_submission/<student_alias>/<submission_id>/<task_id>')
 def delete_submission(student_alias, submission_id, task_id):
@@ -391,4 +392,3 @@ def feedback_student(course_id, task_id, student_id):
             form.score.data = feedback.score
         
     return render_template('feedback_student.html', form=form, task=task, course = course, student = student, submissions=submissions, feedback=feedback)
-
