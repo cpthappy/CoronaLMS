@@ -41,16 +41,16 @@
                 </td>
                 <td>
                     {% if student_count-submissions[task.id] > 0 %}
-                    <a href="{{ url_for('missing_submissions', course_id=course.id, task_id=task.id) }}">{{student_count-submissions[task.id]}}</a>
+                    <a href="{{ url_for('missing_submissions', course_id=course.id, task_id=task.id) }}" style="font-size: 150%">{{student_count-submissions[task.id]}}</a>
                     {% else %}
-                    0
+                    &nbsp;
                     {% endif %}
                 </td>
                 <td>
                     {% if submissions[task.id] > 0 %}
-                    <a href="{{ url_for('feedback_submissions', course_id=course.id, task_id=task.id) }}">{{submissions[task.id]}}</a>
+                    <a href="{{ url_for('feedback_submissions', course_id=course.id, task_id=task.id) }}" style="font-size: 150%">{{submissions[task.id]}}</a>
                     {% else %}
-                    0
+                    &nbsp;
                     {% endif %}
                 </td>
                 <td>
