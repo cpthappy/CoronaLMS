@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import render_template, flash, redirect, url_for, request, send_from_directory
+from flask import render_template, flash, redirect, url_for, request, send_from_directory, make_response
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 from werkzeug.utils import secure_filename
@@ -10,6 +10,8 @@ from collections import Counter
 import os
 import uuid
 import babel
+import io
+import csv
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -367,8 +369,9 @@ def feedback_submissions(course_id, task_id):
     task = Task.query.filter_by(id = task_id).first_or_404()
     submissions = Submission.query.filter_by(task_id = task.id).with_entities(Submission.student_id).distinct()
     submissions = Student.query.filter(Student.id.in_(submissions))
-    feedback = Feedback.query.filter_by(task_id=task.id).with_entities(Submission.student_id).distinct()
+    feedback = Feedback.query.filter_by(task_id=task.id).with_entities(Submission.student_id)
     feedback = Student.query.filter(Student.id.in_(feedback))
+
     return render_template('feedback_submissions.html', task=task, course = course, submissions=submissions, feedback=feedback)
 
 @app.route('/provide_feedback/<course_id>/<task_id>/<student_id>', methods=['GET', 'POST'])
@@ -397,3 +400,19 @@ def feedback_student(course_id, task_id, student_id):
             form.score.data = feedback.score
         
     return render_template('feedback_student.html', form=form, task=task, course = course, student = student, submissions=submissions, feedback=feedback)
+
+@app.route('/report/<type>/<course_id>')
+@login_required
+def report(type, course_id):
+    course = Course.query.filter_by(id = course_id).first_or_404()
+    students = Student.query.filter_by(course = course)
+    if type == 'students':
+        si = io.StringIO()
+        cw = csv.writer(si)
+        cw.writerow(['Name', 'Alias', 'Zuletzt online', 'E-Mail', 'Link'])
+        cw.writerows([(x.name, x.alias, x.last_seen, x.email, app.config['DOMAIN']+'work/'+x.alias) for x in students])
+        response = make_response(si.getvalue())
+        response.headers['Content-Disposition'] = 'attachment; filename=report.csv'
+        response.headers["Content-type"] = "text/csv"
+        return response
+    return render_template('404.html'), 404

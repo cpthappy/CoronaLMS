@@ -10,14 +10,16 @@
     <form action="" method="post">
         {{ form.hidden_tag() }}
         <p>
-            {{ form.number.label }}&nbsp; {{ form.number() }} &nbsp; {{ form.submit() }}<br>
+            {{ form.number.label }}&nbsp; {{ form.number() }} &nbsp; {{ form.submit() }} &nbsp; <br>
             {% for error in form.number.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
     </form>
     <a href="{{url_for('manage_course',course_id=course.id)}}"><span class="fas fa-arrow-left"
-            style="font-size:18pt"></span></a>
+            style="font-size:18pt"></span></a>&nbsp;
+    <a href="{{url_for('report', type='students', course_id=course.id)}}" style="font-size:18pt" target="_blank"><i
+            class="fas fa-file-export"></i></a>
     <table class="table">
         <tr>
             <th>Name</th>
