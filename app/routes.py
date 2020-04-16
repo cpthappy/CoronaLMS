@@ -3,7 +3,7 @@ from flask import render_template, flash, redirect, url_for, request, send_from_
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 from werkzeug.utils import secure_filename
-from app.models import User, Course, Task, Student, Submission, Feedback
+from app.models import User, Course, Task, Student, Submission, Feedback, Message
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, CourseForm, TaskForm,AddStudentForm, StudentForm, TaskWorkForm, FeedbackForm, MessageForm
 from collections import Counter
@@ -320,29 +320,35 @@ def task(student_alias, task_id):
     task = Task.query.filter_by(id=task_id).first_or_404()
     submissions = Submission.query.filter_by(task_id=task.id, student_id=student.id)
     feedback = Feedback.query.filter_by(task=task, student=student).one_or_none()
-    messages = ["Test 123242525 weffösoghww", "sövosghwvbansöbnsjv ernpgöwnmväwfrg ", "snfgdhaeproghaeürgh"]
+    messages = Message.query.filter_by(task_id=task.id).order_by(Message.timestamp.desc())
     student.last_seen = datetime.utcnow()
     db.session.commit()
 
-    if form.validate_on_submit() and not task.is_done:
-        if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
-        file = request.files['file']
-        if file.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
-            original_filename = secure_filename(file.filename)
-            filename, file_extension = os.path.splitext(original_filename)
-            filename = str(uuid.uuid4())
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename + file_extension))
-            submission = Submission(student_id = student.id, task_id =task.id, filename=filename+file_extension, original_name=original_filename)
-            db.session.add(submission)
-            db.session.commit()
-            flash(original_filename + ' gespeichert.')
+    if form.submit.data and form.validate():
+        if not task.is_done:
+            if 'file' not in request.files:
+                flash('No file part')
+                return redirect(request.url)
+            file = request.files['file']
+            if file.filename == '':
+                flash('No selected file')
+                return redirect(request.url)
+            if file and allowed_file(file.filename):
+                original_filename = secure_filename(file.filename)
+                filename, file_extension = os.path.splitext(original_filename)
+                filename = str(uuid.uuid4())
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename + file_extension))
+                submission = Submission(student_id = student.id, task_id =task.id, filename=filename+file_extension, original_name=original_filename)
+                db.session.add(submission)
+                db.session.commit()
+                flash(original_filename + ' gespeichert.')
     else:
         pass
+    if form_message.submit_message.data and form_message.validate():
+        flash(form_message.text.data)
+        message = Message(text = form_message.text.data, student_alias=student.alias, task_id=task.id)
+        db.session.add(message)
+        db.session.commit()
     return render_template('view_task_student.html', task=task, student = student, submissions=submissions, form=form, feedback=feedback, form_message = form_message, messages = messages)
 
 @app.route('/delete_submission/<student_alias>/<submission_id>/<task_id>')

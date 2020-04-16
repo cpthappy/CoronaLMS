@@ -100,6 +100,7 @@ class Message(db.Model):
     task_id = db.Column(db.Integer, db.ForeignKey('task.id'))
     student_alias = db.Column(db.String(32), nullable=True)
     user_id = db.Column(db.Integer, nullable=True)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
 
 @login.user_loader

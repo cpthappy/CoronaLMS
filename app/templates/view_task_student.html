@@ -60,7 +60,7 @@
             </p>
             </div>
 
-            <div class="border border-primary rounded m-1 p-1">
+            <div class="border border-secondary rounded m-1 p-1">
                 <p>
                     <table class="table">
                         <tr>
@@ -107,7 +107,7 @@
 
 
             {% if feedback %}
-            <div class="border border-primary rounded m-1 p-1">
+            <div class="border border-secondary rounded m-1 p-1">
                 <p>
                     <h2>Feedback: </h2>
                     <p>{{feedback.text}}</p>
@@ -124,13 +124,13 @@
             </p>
         </div>
 
-        <div class="col-lg-3 col-md-6 bg-light m-1 p-1 rounded">
+        <div class="col-lg-4 bg-light rounded">
             <h1>Fragen</h1>
             
             <form action="" method="POST" enctype="multipart/form-data">
                 {{form_message.hidden_tag()}}
                 <p>
-                    {{ form_message.text() }}<br>
+                    {{ form_message.text(rows=4, style="width: 100%") }}<br>
                     {% for error in form_message.text.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                     {% endfor %}
@@ -140,7 +140,8 @@
             </form>
 
             {% for message in messages %}
-            <p class="border rounded bg-secondary p-1">{{message}}</p>
+            <p class="border rounded bg-secondary">{{message.text}}<br>
+                <small class="text-light text-right">{{message.timestamp|datetime}}</small></p>
             {% endfor %}
         </div>
     </div>

@@ -78,5 +78,5 @@ class FeedbackForm(FlaskForm):
     submit = SubmitField('Speichern')
 
 class MessageForm(FlaskForm):
-    text = TextAreaField('Lösung hochladen')
+    text = TextAreaField('Lösung hochladen', validators=[DataRequired()])
     submit_message = SubmitField('Abschicken')
