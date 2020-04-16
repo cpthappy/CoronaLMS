@@ -38,83 +38,111 @@
 {% endblock %}
 
 {% block app_content %}
-<div class="container">
-    <h1>{{task.title}}</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="m-1 p-1">
+            <h1>{{task.title}}</h1>
 
-    {% if task.max_score and not task.is_done%}
-        <h6>Maximale Punktzahl {{task.max_score}}</h6>
-    {% endif %}
-
-    {% if task.due_date and not task.is_done%}
-        <h6>Abgabedatum {{task.due_date | datetime}}</h6>
-    {% endif %}
-</div>
-<div class="container">
-    <a href="{{url_for('work',student_alias=student.alias)}}"><span class="fas fa-arrow-left"
-        style="font-size:18pt"></span></a>
-</div>
-<div class="container">
-    {{task.text | markdown}}
-</div>
-
-<div class="container">
-    <table class="table">
-        <tr>
-            <th>Dateiname</th>
-            <th>Abgegeben am</th>
-            <th></th>
-        </tr>
-        {% for entry in submissions %}
-        <tr>
-            <td>
-                <a href="{{url_for('uploaded_file', filename=entry.filename)}}"
-                    target="_blank">{{entry.original_name}}</a>
-            </td>
-            <td>{{entry.timestamp}}</td>
-            {% if not task.is_done %}
-            <td><a href="{{ url_for('delete_submission', student_alias = student.alias, submission_id=entry.id, task_id=task.id) }}"
-                    onclick="return confirm('Soll die Datei wirklich gelöscht werden?');"><span class="fas fa-trash-alt"
-                        style="font-size:18pt"></span></a></td>
+            {% if task.max_score and not task.is_done%}
+            <h6>Maximale Punktzahl {{task.max_score}}</h6>
             {% endif %}
-        </tr>
-        {% endfor %}
-    </table>
-</div>
 
-{% if not task.is_done %}
-<div class="container">
-    <p>Die Lösungen für die Aufgabe müssen als Bild hochgeladen werden. Wenn
-    die Lösung aus mehreren Bildern besteht, dann muss jedes Bild einzeln
-    hochgeladen werden.</p>
-    <form action="" method="POST" enctype="multipart/form-data">
-        {{form.hidden_tag()}}
-        <p>
-            {{ form.file.label }}<br>
-            {{ form.file() }}<br>
-            {% for error in form.file.errors %}
-            <span style="color: red;">[{{ error }}]</span>
+            {% if task.due_date and not task.is_done%}
+            <h6>Abgabedatum {{task.due_date | datetime}}</h6>
+            {% endif %}
+
+            <p>
+                <a href="{{url_for('work',student_alias=student.alias)}}"><span class="fas fa-arrow-left"
+                        style="font-size:18pt"></span></a></p>
+            <p>
+                {{task.text | markdown}}
+            </p>
+            </div>
+
+            <div class="border border-primary rounded m-1 p-1">
+                <p>
+                    <table class="table">
+                        <tr>
+                            <th>Dateiname</th>
+                            <th>Abgegeben am</th>
+                            <th></th>
+                        </tr>
+                        {% for entry in submissions %}
+                        <tr>
+                            <td>
+                                <a href="{{url_for('uploaded_file', filename=entry.filename)}}"
+                                    target="_blank">{{entry.original_name}}</a>
+                            </td>
+                            <td>{{entry.timestamp}}</td>
+                            {% if not task.is_done %}
+                            <td><a href="{{ url_for('delete_submission', student_alias = student.alias, submission_id=entry.id, task_id=task.id) }}"
+                                    onclick="return confirm('Soll die Datei wirklich gelöscht werden?');"><span
+                                        class="fas fa-trash-alt" style="font-size:18pt"></span></a></td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </p>
+
+                {% if not task.is_done %}
+
+                <p>Die Lösungen für die Aufgabe müssen als Bild hochgeladen werden. Wenn
+                    die Lösung aus mehreren Bildern besteht, dann muss jedes Bild einzeln
+                    hochgeladen werden.</p>
+                <form action="" method="POST" enctype="multipart/form-data">
+                    {{form.hidden_tag()}}
+                    <p>
+                        {{ form.file.label }}<br>
+                        {{ form.file() }}<br>
+                        {% for error in form.file.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                    </p>
+
+                    <p>{{ form.submit() }}</p>
+                </form>
+            </div>
+            {% endif %}
+
+
+            {% if feedback %}
+            <div class="border border-primary rounded m-1 p-1">
+                <p>
+                    <h2>Feedback: </h2>
+                    <p>{{feedback.text}}</p>
+                    {% if task.max_score %}
+                    <p>Erreichte Punkte: <b>{{feedback.score}}</b> von {{task.max_score}}</p>
+                    {% endif %}
+                </p>
+            </div>
+            {% endif %}
+
+            <p>
+                <a href="{{url_for('work',student_alias=student.alias)}}"><span class="fas fa-arrow-left"
+                        style="font-size:18pt"></span></a>
+            </p>
+        </div>
+
+        <div class="col-lg-3 col-md-6 bg-light m-1 p-1 rounded">
+            <h1>Fragen</h1>
+            
+            <form action="" method="POST" enctype="multipart/form-data">
+                {{form_message.hidden_tag()}}
+                <p>
+                    {{ form_message.text() }}<br>
+                    {% for error in form_message.text.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </p>
+
+                <p>{{ form_message.submit_message() }}</p>
+            </form>
+
+            {% for message in messages %}
+            <p class="border rounded bg-info p-1">{{message}}</p>
             {% endfor %}
-        </p>
+        </div>
+    </div>
 
-        <p>{{ form.submit() }}</p>
-    </form>
-</div>
-{% endif %}
-
-{% if feedback %}
-<div class="container">
-    <hr>
-    <h2>Feedback: </h2>
-    <p>{{feedback.text}}</p>
-    {% if task.max_score %}
-    <p>Erreichte Punkte: <b>{{feedback.score}}</b> von {{task.max_score}}</p>
-    {% endif %}
-</div>
-{% endif %}
-
-<div class="container">
-<a href="{{url_for('work',student_alias=student.alias)}}"><span class="fas fa-arrow-left"
-        style="font-size:18pt"></span></a>
-</div>
-
-{% endblock %}
+    {% endblock %}

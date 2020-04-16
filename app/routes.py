@@ -5,7 +5,7 @@ from werkzeug.urls import url_parse
 from werkzeug.utils import secure_filename
 from app.models import User, Course, Task, Student, Submission, Feedback
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, EditProfileForm, CourseForm, TaskForm,AddStudentForm, StudentForm, TaskWorkForm, FeedbackForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, CourseForm, TaskForm,AddStudentForm, StudentForm, TaskWorkForm, FeedbackForm, MessageForm
 from collections import Counter
 import os
 import uuid
@@ -315,10 +315,12 @@ def work(student_alias):
 @app.route('/task/<student_alias>/<task_id>', methods=['GET', 'POST'])
 def task(student_alias, task_id):
     form = TaskWorkForm()
+    form_message = MessageForm()
     student = Student.query.filter_by(alias= student_alias).first_or_404()
     task = Task.query.filter_by(id=task_id).first_or_404()
     submissions = Submission.query.filter_by(task_id=task.id, student_id=student.id)
     feedback = Feedback.query.filter_by(task=task, student=student).one_or_none()
+    messages = ["Test 123242525 weffösoghww", "sövosghwvbansöbnsjv ernpgöwnmväwfrg ", "snfgdhaeproghaeürgh"]
     student.last_seen = datetime.utcnow()
     db.session.commit()
 
@@ -341,7 +343,7 @@ def task(student_alias, task_id):
             flash(original_filename + ' gespeichert.')
     else:
         pass
-    return render_template('view_task_student.html', task=task, student = student, submissions=submissions, form=form, feedback=feedback)
+    return render_template('view_task_student.html', task=task, student = student, submissions=submissions, form=form, feedback=feedback, form_message = form_message, messages = messages)
 
 @app.route('/delete_submission/<student_alias>/<submission_id>/<task_id>')
 def delete_submission(student_alias, submission_id, task_id):

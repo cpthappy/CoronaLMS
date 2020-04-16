@@ -127,14 +127,5 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-logs/corona_lms.log.1
-logs/corona_lms.log.2
-app.db
-logs/corona_lms.log.3
-logs/corona_lms.log.4
-logs/corona_lms.log.5
-logs/corona_lms.log.6
-logs/corona_lms.log.7
-logs/corona_lms.log.8
-logs/corona_lms.log.9
-logs/corona_lms.log.10
+logs/
+students/uploads

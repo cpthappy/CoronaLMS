@@ -76,3 +76,7 @@ class FeedbackForm(FlaskForm):
     text = TextAreaField('Feedback')
     score = IntegerField('Punktzahl')
     submit = SubmitField('Speichern')
+
+class MessageForm(FlaskForm):
+    text = TextAreaField('Lösung hochladen')
+    submit_message = SubmitField('Abschicken')
