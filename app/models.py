@@ -17,6 +17,7 @@ class User(UserMixin, db.Model):
     about_me = db.Column(db.String(140))
     institution = db.Column(db.String(140))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
+    show_email = db.Column(db.Boolean, unique=False, default=False)
 
     def avatar(self, size):
         digest = md5(self.email.lower().encode('utf-8')).hexdigest()

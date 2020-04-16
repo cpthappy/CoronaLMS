@@ -1,4 +1,4 @@
-2020-04-14 21:07:13,849 ERROR: Exception on /login [GET] [in c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\app.py:1890]
+2020-04-15 11:32:52,295 ERROR: Exception on /work/20530347 [GET] [in c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\app.py:1890]
 Traceback (most recent call last):
   File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\app.py", line 2446, in wsgi_app
     response = self.full_dispatch_request()
@@ -12,28 +12,36 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\app.py", line 1935, in dispatch_request
     return self.view_functions[rule.endpoint](**req.view_args)
-  File "C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\routes.py", line 63, in login
-    return render_template('login.html', title='Login', form=form)
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\templating.py", line 137, in render_template
-    return _render(
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\templating.py", line 120, in _render
-    rv = template.render(context)
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\environment.py", line 1090, in render
-    self.environment.handle_exception()
+  File "C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\routes.py", line 304, in work
+    return render_template('view_course_student.html', course=course, tasks=tasks, student = student, form=form)
+  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\templating.py", line 138, in render_template
+    ctx.app.jinja_env.get_or_select_template(template_name_or_list),
+  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\environment.py", line 930, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\environment.py", line 883, in get_template
+    return self._load_template(name, self.make_globals(globals))
+  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\environment.py", line 857, in _load_template
+    template = self.loader.load(self, name, globals)
+  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\loaders.py", line 129, in load
+    code = environment.compile(source, name, filename)
+  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\environment.py", line 638, in compile
+    self.handle_exception(source=source_hint)
   File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\environment.py", line 832, in handle_exception
     reraise(*rewrite_traceback_stack(source=source))
   File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\_compat.py", line 28, in reraise
     raise value.with_traceback(tb)
-  File "C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\templates\login.html", line 1, in top-level template code
-    {% extends "base.html" %}
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\environment.py", line 832, in handle_exception
-    reraise(*rewrite_traceback_stack(source=source))
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\_compat.py", line 28, in reraise
-    raise value.with_traceback(tb)
-  File "C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\templates\base.html", line 12, in template
-    <link href="{{ url_for('static', filename='css/pricing.css) }}" rel="stylesheet">
-jinja2.exceptions.TemplateSyntaxError: unexpected char "'" at 385
-2020-04-14 21:07:17,502 ERROR: Exception on /login [GET] [in c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\app.py:1890]
+  File "C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\templates\view_course_student.html", line 60, in template
+    {% if task.max_scoreand not task.is_done %}
+jinja2.exceptions.TemplateSyntaxError: expected token 'end of statement block', got 'not'
+2020-04-15 11:34:31,890 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 20:31:50,373 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 20:33:58,994 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 20:35:04,397 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 20:37:27,558 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 20:40:15,939 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 20:42:03,039 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 20:58:19,654 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 20:58:28,861 ERROR: Exception on /task/20530347/1 [GET] [in c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\app.py:1890]
 Traceback (most recent call last):
   File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\app.py", line 2446, in wsgi_app
     response = self.full_dispatch_request()
@@ -47,70 +55,24 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\app.py", line 1935, in dispatch_request
     return self.view_functions[rule.endpoint](**req.view_args)
-  File "C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\routes.py", line 63, in login
-    return render_template('login.html', title='Login', form=form)
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\templating.py", line 137, in render_template
-    return _render(
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\templating.py", line 120, in _render
-    rv = template.render(context)
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\environment.py", line 1090, in render
-    self.environment.handle_exception()
+  File "C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\routes.py", line 335, in task
+    return render_template('view_task_student.html', task=task, student = student, submissions=submissions, form=form)
+  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\templating.py", line 138, in render_template
+    ctx.app.jinja_env.get_or_select_template(template_name_or_list),
+  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\environment.py", line 930, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\environment.py", line 883, in get_template
+    return self._load_template(name, self.make_globals(globals))
+  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\environment.py", line 857, in _load_template
+    template = self.loader.load(self, name, globals)
+  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\loaders.py", line 129, in load
+    code = environment.compile(source, name, filename)
+  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\environment.py", line 638, in compile
+    self.handle_exception(source=source_hint)
   File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\environment.py", line 832, in handle_exception
     reraise(*rewrite_traceback_stack(source=source))
   File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\_compat.py", line 28, in reraise
     raise value.with_traceback(tb)
-  File "C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\templates\login.html", line 1, in top-level template code
-    {% extends "base.html" %}
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\environment.py", line 832, in handle_exception
-    reraise(*rewrite_traceback_stack(source=source))
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\_compat.py", line 28, in reraise
-    raise value.with_traceback(tb)
-  File "C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\templates\base.html", line 12, in template
-    <link href="{{ url_for('static', filename='css/pricing.css) }}" rel="stylesheet">
-jinja2.exceptions.TemplateSyntaxError: unexpected char "'" at 385
-2020-04-14 21:07:52,202 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
-2020-04-14 21:08:12,515 ERROR: Exception on /login [GET] [in c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\app.py:1890]
-Traceback (most recent call last):
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\app.py", line 2446, in wsgi_app
-    response = self.full_dispatch_request()
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\app.py", line 1951, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\app.py", line 1820, in handle_user_exception
-    reraise(exc_type, exc_value, tb)
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\_compat.py", line 39, in reraise
-    raise value
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\app.py", line 1949, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\app.py", line 1935, in dispatch_request
-    return self.view_functions[rule.endpoint](**req.view_args)
-  File "C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\routes.py", line 63, in login
-    return render_template('login.html', title='Login', form=form)
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\templating.py", line 137, in render_template
-    return _render(
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\templating.py", line 120, in _render
-    rv = template.render(context)
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\environment.py", line 1090, in render
-    self.environment.handle_exception()
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\environment.py", line 832, in handle_exception
-    reraise(*rewrite_traceback_stack(source=source))
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\_compat.py", line 28, in reraise
-    raise value.with_traceback(tb)
-  File "C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\templates\login.html", line 1, in top-level template code
-    {% extends "base.html" %}
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\environment.py", line 832, in handle_exception
-    reraise(*rewrite_traceback_stack(source=source))
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\_compat.py", line 28, in reraise
-    raise value.with_traceback(tb)
-  File "C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\templates\base.html", line 12, in template
-    <link href="{{ url_for('static', filename='css/pricing.css) }}" rel="stylesheet">
-jinja2.exceptions.TemplateSyntaxError: unexpected char "'" at 385
-2020-04-14 21:09:13,121 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
-2020-04-14 21:15:30,847 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
-2020-04-14 21:16:47,783 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
-2020-04-15 06:54:24,912 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
-2020-04-15 06:58:38,904 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
-2020-04-15 07:00:56,638 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
-2020-04-15 07:14:23,496 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
-2020-04-15 07:19:56,585 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
-2020-04-15 07:23:18,041 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
-2020-04-15 07:27:11,878 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+  File "C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\templates\view_task_student.html", line 108, in template
+    <p>{{feedback.text}</p>
+jinja2.exceptions.TemplateSyntaxError: unexpected '}'

@@ -29,6 +29,12 @@
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
+        <p>
+            {{ form.show_mail.label }}&nbsp; {{ form.show_mail() }}<br>
+            {% for error in form.show_mail.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
         <p>{{ form.submit() }}  &nbsp; <a href="{{ url_for('index') }}">Abbrechen</a> </p>
     </form>
 </div>

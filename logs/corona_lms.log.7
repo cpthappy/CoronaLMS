@@ -1,4 +1,28 @@
-2020-04-14 09:13:19,709 ERROR: Exception on /login [GET] [in c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\app.py:1890]
+2020-04-15 07:34:29,863 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 07:38:18,952 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 07:47:29,243 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 07:54:33,284 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 08:00:32,560 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 08:01:57,874 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 08:16:37,506 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 08:20:09,585 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 08:28:47,378 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 08:30:55,252 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 08:36:06,258 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 08:37:43,700 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 08:39:35,706 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 08:42:23,263 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 08:51:58,921 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 09:04:58,506 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 09:10:10,234 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 09:12:12,461 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 09:13:58,340 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 09:17:52,067 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 09:19:34,354 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 09:20:54,473 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 11:05:15,700 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 11:07:54,080 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 11:08:32,869 ERROR: Exception on /task/20530347/1 [GET] [in c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\app.py:1890]
 Traceback (most recent call last):
   File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\app.py", line 2446, in wsgi_app
     response = self.full_dispatch_request()
@@ -12,26 +36,36 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\app.py", line 1935, in dispatch_request
     return self.view_functions[rule.endpoint](**req.view_args)
-  File "C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\routes.py", line 49, in login
-    form = LoginForm()
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\wtforms\form.py", line 212, in __call__
-    return type.__call__(cls, *args, **kwargs)
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask_wtf\form.py", line 87, in __init__
-    super(FlaskForm, self).__init__(formdata=formdata, **kwargs)
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\wtforms\form.py", line 272, in __init__
-    super(Form, self).__init__(self._unbound_fields, meta=meta_obj, prefix=prefix)
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\wtforms\form.py", line 52, in __init__
-    field = meta.bind_field(self, unbound_field, options)
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\wtforms\meta.py", line 27, in bind_field
-    return unbound_field.bind(form=form, **options)
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\wtforms\fields\core.py", line 353, in bind
-    return self.field_class(*self.args, **kw)
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\wtforms\fields\core.py", line 702, in __init__
-    super(BooleanField, self).__init__(label, validators, **kwargs)
-TypeError: __init__() got an unexpected keyword argument 'class'
-2020-04-14 09:13:42,211 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
-2020-04-14 21:05:53,031 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
-2020-04-14 21:06:05,727 ERROR: Exception on /login [GET] [in c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\app.py:1890]
+  File "C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\routes.py", line 334, in task
+    return render_template('view_task_student.html', task=task, student = student, submissions=submissions, form=form)
+  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\templating.py", line 138, in render_template
+    ctx.app.jinja_env.get_or_select_template(template_name_or_list),
+  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\environment.py", line 930, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\environment.py", line 883, in get_template
+    return self._load_template(name, self.make_globals(globals))
+  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\environment.py", line 857, in _load_template
+    template = self.loader.load(self, name, globals)
+  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\loaders.py", line 129, in load
+    code = environment.compile(source, name, filename)
+  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\environment.py", line 638, in compile
+    self.handle_exception(source=source_hint)
+  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\environment.py", line 832, in handle_exception
+    reraise(*rewrite_traceback_stack(source=source))
+  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\_compat.py", line 28, in reraise
+    raise value.with_traceback(tb)
+  File "C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\templates\view_task_student.html", line 70, in template
+    <a href="{{url_for('uploaded_file'), filename=entry.filename)}}" target="_blank">{{entry.original_name}}</a>
+jinja2.exceptions.TemplateSyntaxError: expected token 'end of print statement', got '='
+2020-04-15 11:09:14,243 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 11:11:38,996 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 11:12:57,621 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 11:16:11,272 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 11:18:13,674 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 11:18:57,851 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 11:26:03,922 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 11:32:11,197 INFO: Corona LMS startup [in C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\__init__.py:38]
+2020-04-15 11:32:43,549 ERROR: Exception on /work/20530347 [GET] [in c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\app.py:1890]
 Traceback (most recent call last):
   File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\app.py", line 2446, in wsgi_app
     response = self.full_dispatch_request()
@@ -45,59 +79,24 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\app.py", line 1935, in dispatch_request
     return self.view_functions[rule.endpoint](**req.view_args)
-  File "C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\routes.py", line 63, in login
-    return render_template('login.html', title='Login', form=form)
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\templating.py", line 137, in render_template
-    return _render(
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\templating.py", line 120, in _render
-    rv = template.render(context)
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\environment.py", line 1090, in render
-    self.environment.handle_exception()
+  File "C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\routes.py", line 304, in work
+    return render_template('view_course_student.html', course=course, tasks=tasks, student = student, form=form)
+  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\templating.py", line 138, in render_template
+    ctx.app.jinja_env.get_or_select_template(template_name_or_list),
+  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\environment.py", line 930, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\environment.py", line 883, in get_template
+    return self._load_template(name, self.make_globals(globals))
+  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\environment.py", line 857, in _load_template
+    template = self.loader.load(self, name, globals)
+  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\loaders.py", line 129, in load
+    code = environment.compile(source, name, filename)
+  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\environment.py", line 638, in compile
+    self.handle_exception(source=source_hint)
   File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\environment.py", line 832, in handle_exception
     reraise(*rewrite_traceback_stack(source=source))
   File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\_compat.py", line 28, in reraise
     raise value.with_traceback(tb)
-  File "C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\templates\login.html", line 1, in top-level template code
-    {% extends "base.html" %}
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\environment.py", line 832, in handle_exception
-    reraise(*rewrite_traceback_stack(source=source))
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\_compat.py", line 28, in reraise
-    raise value.with_traceback(tb)
-  File "C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\templates\base.html", line 27, in template
-    <a class="nav-link" href="{{ url_for('index') }}">Kursübersicht</a>
-jinja2.exceptions.TemplateSyntaxError: expected token ',', got 'index'
-2020-04-14 21:06:06,341 ERROR: Exception on /login [GET] [in c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\app.py:1890]
-Traceback (most recent call last):
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\app.py", line 2446, in wsgi_app
-    response = self.full_dispatch_request()
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\app.py", line 1951, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\app.py", line 1820, in handle_user_exception
-    reraise(exc_type, exc_value, tb)
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\_compat.py", line 39, in reraise
-    raise value
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\app.py", line 1949, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\app.py", line 1935, in dispatch_request
-    return self.view_functions[rule.endpoint](**req.view_args)
-  File "C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\routes.py", line 63, in login
-    return render_template('login.html', title='Login', form=form)
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\templating.py", line 137, in render_template
-    return _render(
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\flask\templating.py", line 120, in _render
-    rv = template.render(context)
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\environment.py", line 1090, in render
-    self.environment.handle_exception()
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\environment.py", line 832, in handle_exception
-    reraise(*rewrite_traceback_stack(source=source))
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\_compat.py", line 28, in reraise
-    raise value.with_traceback(tb)
-  File "C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\templates\login.html", line 1, in top-level template code
-    {% extends "base.html" %}
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\environment.py", line 832, in handle_exception
-    reraise(*rewrite_traceback_stack(source=source))
-  File "c:\users\vogel\appdata\local\programs\python\python38-32\lib\site-packages\jinja2\_compat.py", line 28, in reraise
-    raise value.with_traceback(tb)
-  File "C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\templates\base.html", line 27, in template
-    <a class="nav-link" href="{{ url_for('index') }}">Kursübersicht</a>
-jinja2.exceptions.TemplateSyntaxError: expected token ',', got 'index'
+  File "C:\Users\vogel\OneDrive\Desktop\CoronaLMS\app\templates\view_course_student.html", line 60, in template
+    {% if task.max_scoreand not task.is_done %}
+jinja2.exceptions.TemplateSyntaxError: expected token 'end of statement block', got 'not'
