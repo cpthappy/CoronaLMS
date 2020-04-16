@@ -426,3 +426,19 @@ def report(type, course_id):
         response.headers["Content-type"] = "text/csv"
         return response
     return render_template('404.html'), 404
+
+
+@app.route('/task_teacher/<course_id>/<task_id>', methods=['GET', 'POST'])
+@login_required
+def task_teacher(course_id, task_id):
+    form_message = MessageForm()
+    course = Course.query.filter_by(author= current_user, id=course_id).first_or_404()
+    task = Task.query.filter_by(id=task_id, course=course).first_or_404()
+    messages = Message.query.filter_by(task_id=task.id).order_by(Message.timestamp.desc())
+
+    if form_message.submit_message.data and form_message.validate():
+        flash(form_message.text.data)
+        message = Message(text = form_message.text.data, user_id=current_user.id, task_id=task.id)
+        db.session.add(message)
+        db.session.commit()
+    return render_template('view_task_teacher.html', task=task, course=course, form_message = form_message, messages = messages)

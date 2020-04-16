@@ -27,7 +27,7 @@
             {% for task in tasks %}
             <tr>
                 <th>
-                    {{task.title}}
+                   <a href="{{url_for('task_teacher', course_id=course.id, task_id=task.id)}}"> {{task.title}}</a>
                 </th>
                 <td>
                     {% if task.due_date %}
