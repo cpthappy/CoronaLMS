@@ -39,6 +39,7 @@ def format_datetime(value, format='medium'):
 @login_required
 def index():
     courses = Course.query.filter_by(author = current_user)
+  
     return render_template("index.html", title='Startseite', courses=courses)
 
 @app.route('/login', methods=['GET', 'POST'])
