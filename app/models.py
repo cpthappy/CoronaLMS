@@ -60,6 +60,7 @@ class Task(db.Model):
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'))
     submissions = db.relationship('Submission', backref='task', lazy='dynamic')
     scores = db.relationship('Feedback', backref='task', lazy='dynamic')
+    messages = db.relationship('Message', backref='task', lazy='dynamic')
 
     def __repr__(self):
         return '<Task {}>'.format(self.title)
@@ -92,6 +93,13 @@ class Feedback(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     text = db.Column(db.String)
     score = db.Column(db.Integer)
+
+class Message(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    text = db.Column(db.String, nullable=False)
+    task_id = db.Column(db.Integer, db.ForeignKey('task.id'))
+    student_alias = db.Column(db.String(32), nullable=True)
+    user_id = db.Column(db.Integer, nullable=True)
 
 
 @login.user_loader
