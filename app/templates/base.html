@@ -43,5 +43,9 @@
 
   {# application content needs to be provided in the app_content block #}
   {% block app_content %}{% endblock %}
+  {%- block footer %}
+  <footer><p class="text-center"><a href="{{url_for('static', filename='html/impressum.html') }}">Impressum</a></p></footer>
+  {%- endblock footer %}
 </div>
 {% endblock %}
+
