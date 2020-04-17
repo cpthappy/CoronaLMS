@@ -42,22 +42,22 @@
     <div class="row">
         <div class="col-lg-8">
             <div class="m-1 p-1">
-            <h1>{{task.title}}</h1>
+                <h1>{{task.title}}</h1>
 
-            {% if task.max_score and not task.is_done%}
-            <h6>Maximale Punktzahl {{task.max_score}}</h6>
-            {% endif %}
+                {% if task.max_score and not task.is_done%}
+                <h6>Maximale Punktzahl {{task.max_score}}</h6>
+                {% endif %}
 
-            {% if task.due_date and not task.is_done%}
-            <h6>Abgabedatum {{task.due_date | datetime}}</h6>
-            {% endif %}
+                {% if task.due_date and not task.is_done%}
+                <h6>Abgabedatum {{task.due_date | datetime}}</h6>
+                {% endif %}
 
-            <p>
-                <a href="{{url_for('work',student_alias=student.alias)}}"><span class="fas fa-arrow-left"
-                        style="font-size:18pt"></span></a></p>
-            <p>
-                {{task.text | markdown}}
-            </p>
+                <p>
+                    <a href="{{url_for('work',student_alias=student.alias)}}"><span class="fas fa-arrow-left"
+                            style="font-size:18pt"></span></a></p>
+                <p>
+                    {{task.text | markdown}}
+                </p>
             </div>
 
             <div class="border border-secondary rounded m-1 p-1">
@@ -125,8 +125,9 @@
         </div>
 
         <div class="col-lg-4 bg-light rounded">
-            <h1>Fragen</h1>
-            
+            <h2>Fragen</h2>
+
+            {% if not task.is_done %}
             <form action="" method="POST" enctype="multipart/form-data">
                 {{form_message.hidden_tag()}}
                 <p>
@@ -138,10 +139,17 @@
 
                 <p>{{ form_message.submit_message() }}</p>
             </form>
+            {% endif %}
 
             {% for message in messages %}
-            <p class="border rounded bg-secondary">{{message.text}}<br>
-                <small class="text-light text-right">{{message.timestamp|datetime}}</small></p>
+            {% if message.student_alias %}
+            <p class="border rounded bg-white">
+                {{message.text}}<br>
+                <small class="text-dark">{{message.timestamp|datetime}}</small></p>
+            {% else %}
+            <p class="border rounded bg-white text-primary">{{message.text}}<br>
+                <small class="text-dark">{{message.timestamp|datetime}}</small></p>
+            {% endif %}
             {% endfor %}
         </div>
     </div>

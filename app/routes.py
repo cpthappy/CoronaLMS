@@ -345,7 +345,6 @@ def task(student_alias, task_id):
     else:
         pass
     if form_message.submit_message.data and form_message.validate():
-        flash(form_message.text.data)
         message = Message(text = form_message.text.data, student_alias=student.alias, task_id=task.id)
         db.session.add(message)
         db.session.commit()
@@ -437,7 +436,6 @@ def task_teacher(course_id, task_id):
     messages = Message.query.filter_by(task_id=task.id).order_by(Message.timestamp.desc())
 
     if form_message.submit_message.data and form_message.validate():
-        flash(form_message.text.data)
         message = Message(text = form_message.text.data, user_id=current_user.id, task_id=task.id)
         db.session.add(message)
         db.session.commit()

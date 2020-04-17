@@ -62,7 +62,7 @@
 
 <div class="container">
     <div class="m-1 p-1">
-        <h1>Fragen</h1>
+        <h2>Fragen</h2>
 
         <form action="" method="POST" enctype="multipart/form-data">
             {{form_message.hidden_tag()}}
@@ -77,8 +77,14 @@
         </form>
 
         {% for message in messages %}
-        <p class="border rounded bg-secondary">{{message.text}}<br>
-            <small class="text-light text-right">{{message.timestamp|datetime}}</small></p>
+        {% if message.student_alias %}
+        <p class="border rounded bg-white">
+            {{message.text}}<br>
+            <small class="text-dark">{{message.timestamp|datetime}}</small></p>
+        {% else %}
+        <p class="border rounded bg-white text-primary">{{message.text}}<br>
+            <small class="text-dark">{{message.timestamp|datetime}}</small></p>
+        {% endif %}
         {% endfor %}
     </div>
 </div>

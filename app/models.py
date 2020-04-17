@@ -57,6 +57,7 @@ class Task(db.Model):
     due_date = db.Column(db.DateTime)
     max_score = db.Column(db.Integer, nullable=True)
     is_done = db.Column(db.Boolean, default=False)
+    is_visible = db.Column(db.Boolean, default=False)
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'))
     submissions = db.relationship('Submission', backref='task', lazy='dynamic')
     scores = db.relationship('Feedback', backref='task', lazy='dynamic')
