@@ -45,14 +45,14 @@
             {% endfor %}
           </p>
           <p>
-            <input type="checkbox" onchange="document.getElementById('submit').disabled = !this.checked;"
-                name='visto' id='visto' />
+            <input type="checkbox" onchange="document.getElementById('submit').disabled = !this.checked;" name='visto'
+              id='visto' />
             Ich habe die <a href="{{url_for('static', filename='html/Datenschutz_v1.html')}}"
-                target="_blank">Datenschutzerklärung</a> gelesen und erkläre mich damit einverstanden, dass meine
+              target="_blank">Datenschutzerklärung</a> gelesen und erkläre mich damit einverstanden, dass meine
             Daten
             elektronisch verarbeitet und gespeichert werden.
-        </p>
-        <p>{{ form.submit(disabled="True") }}</p>
+          </p>
+          <p>{{ form.submit(disabled="True") }}</p>
         </form>
       </div>
     </div>
@@ -62,6 +62,7 @@
 <div class="container">
   <div class="card-deck mb-3">
     {% for task in tasks %}
+    {% if task.is_visible %}
     <div class="card mb-4 box-shadow">
       <div class="card-header text-center">
         <h4 class="my-0 font-weight-normal">{{task.title}}</h4>
@@ -88,7 +89,8 @@
         href="{{url_for('task', student_alias=student.alias, task_id=task.id)}}">Ansehen</a>
       {% endif %}
     </div>
+    {% endif %}
+    {% endfor %}
   </div>
-  {% endfor %}
 </div>
 {% endblock %}

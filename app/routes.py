@@ -224,6 +224,39 @@ def close_task(course_id, task_id):
     flash('Aufgabe ' + title + ' als abgeschlossen markiert.')
     return redirect(url_for('manage_course', course_id=course_id))
 
+@app.route('/reopen_task/<course_id>/<task_id>')
+@login_required
+def reopen_task(course_id, task_id):
+    course = Course.query.filter_by(id = course_id, author = current_user).first_or_404()
+    task = Task.query.filter_by(id = task_id, course=course).first_or_404()
+    title = task.title
+    task.is_done = False
+    db.session.commit()
+    flash('Aufgabe ' + title + ' wurde wieder akiviert.')
+    return redirect(url_for('manage_course', course_id=course_id))
+
+@app.route('/hide_task/<course_id>/<task_id>')
+@login_required
+def hide_task(course_id, task_id):
+    course = Course.query.filter_by(id = course_id, author = current_user).first_or_404()
+    task = Task.query.filter_by(id = task_id, course=course).first_or_404()
+    title = task.title
+    task.is_visible = False
+    db.session.commit()
+    flash('Aufgabe ' + title + ' ist nicht mehr sichtbar für Teilnehmer.')
+    return redirect(url_for('manage_course', course_id=course_id))
+
+@app.route('/show_task/<course_id>/<task_id>')
+@login_required
+def show_task(course_id, task_id):
+    course = Course.query.filter_by(id = course_id, author = current_user).first_or_404()
+    task = Task.query.filter_by(id = task_id, course=course).first_or_404()
+    title = task.title
+    task.is_visible = True
+    db.session.commit()
+    flash('Aufgabe ' + title + ' ist jetzt sichtbar für Teilnehmer.')
+    return redirect(url_for('manage_course', course_id=course_id))
+
 @app.route('/edit_task/<course_id>/<task_id>', methods=['GET', 'POST'])
 @login_required
 def edit_task(course_id, task_id):
