@@ -1,7 +1,10 @@
 flask
 flask-wtf
-flask-fontawesome
+Flask-FontAwesome
 flask-login
 flask-migrate
 flask-sqlalchemy
+flask_bootstrap
+flask-markdown
+flask-pagedown
 babel

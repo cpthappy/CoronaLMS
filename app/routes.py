@@ -446,18 +446,39 @@ def feedback_student(course_id, task_id, student_id):
 @app.route('/report/<type>/<course_id>')
 @login_required
 def report(type, course_id):
-    course = Course.query.filter_by(id = course_id).first_or_404()
+    course = Course.query.filter_by(id = course_id, author=current_user).first_or_404()
     students = Student.query.filter_by(course = course)
+    si = io.StringIO()
+    cw = csv.writer(si)
     if type == 'students':
-        si = io.StringIO()
-        cw = csv.writer(si)
         cw.writerow(['Name', 'Alias', 'Zuletzt online', 'E-Mail', 'Link'])
         cw.writerows([(x.name, x.alias, x.last_seen, x.email, app.config['DOMAIN']+'work/'+x.alias) for x in students])
-        response = make_response(si.getvalue())
-        response.headers['Content-Disposition'] = 'attachment; filename=report.csv'
-        response.headers["Content-type"] = "text/csv"
-        return response
-    return render_template('404.html'), 404
+        
+    elif type == 'scores':
+        student_ids = Student.query.filter_by(course = course).with_entities(Student.id)
+        feedback = Feedback.query.with_entities(Feedback.student_id, Feedback.task_id, Feedback.score).filter(Feedback.student_id.in_(student_ids))
+        tasks = set()
+        results = {}
+        for student in students:
+            results[student.name] = {}
+            for f in feedback:
+                results[str(f.task_id)] = str(f.score)
+                tasks.add(str(f.task_id))
+        tasks = sorted(list(tasks))
+        header = ["Name"]
+        header.extend(tasks)
+        cw.writerow(header)
+        for entry in results:
+            values = results[entry]
+            cw.writerow([values[x] if x in values else '' for x in header])
+            
+    else:
+        return render_template('404.html'), 404
+    
+    response = make_response(si.getvalue())
+    response.headers['Content-Disposition'] = 'attachment; filename=report.csv'
+    response.headers["Content-type"] = "text/csv"
+    return response
 
 
 @app.route('/task_teacher/<course_id>/<task_id>', methods=['GET', 'POST'])
