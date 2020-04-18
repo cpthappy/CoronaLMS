@@ -1,0 +1,5 @@
+include app.db
+graft app/static
+graft app/templates
+graft students
+global-exclude *.pyc
