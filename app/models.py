@@ -53,7 +53,7 @@ class Course(db.Model):
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(140), nullable=False)
-    text = db.Column(db.String)
+    text = db.Column(db.String(32768))
     due_date = db.Column(db.DateTime)
     max_score = db.Column(db.Integer, nullable=True)
     is_done = db.Column(db.Boolean, default=False)
@@ -97,7 +97,7 @@ class Feedback(db.Model):
 
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    text = db.Column(db.String, nullable=False)
+    text = db.Column(db.String(2048), nullable=False)
     task_id = db.Column(db.Integer, db.ForeignKey('task.id'))
     student_alias = db.Column(db.String(32), nullable=True)
     user_id = db.Column(db.Integer, nullable=True)
