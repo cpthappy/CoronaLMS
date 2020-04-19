@@ -102,6 +102,7 @@ class Message(db.Model):
     student_alias = db.Column(db.String(32), nullable=True)
     user_id = db.Column(db.Integer, nullable=True)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    name = db.Column(db.String(64), nullable=True)
 
 
 @login.user_loader
