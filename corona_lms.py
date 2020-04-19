@@ -10,3 +10,6 @@ def make_shell_context():
     'Student':Student,
     'Submission':Submission,
     'Feedback':Feedback}
+
+if __name__=='__main__':
+    app.run()

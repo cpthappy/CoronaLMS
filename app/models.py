@@ -17,6 +17,7 @@ class User(UserMixin, db.Model):
     about_me = db.Column(db.String(140))
     institution = db.Column(db.String(140))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
+    show_email = db.Column(db.Boolean, unique=False, default=False)
 
     def avatar(self, size):
         digest = md5(self.email.lower().encode('utf-8')).hexdigest()
@@ -52,13 +53,15 @@ class Course(db.Model):
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(140), nullable=False)
-    text = db.Column(db.String)
+    text = db.Column(db.String(21000))
     due_date = db.Column(db.DateTime)
     max_score = db.Column(db.Integer, nullable=True)
     is_done = db.Column(db.Boolean, default=False)
+    is_visible = db.Column(db.Boolean, default=False)
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'))
     submissions = db.relationship('Submission', backref='task', lazy='dynamic')
     scores = db.relationship('Feedback', backref='task', lazy='dynamic')
+    messages = db.relationship('Message', backref='task', lazy='dynamic')
 
     def __repr__(self):
         return '<Task {}>'.format(self.title)
@@ -89,8 +92,17 @@ class Feedback(db.Model):
     task_id = db.Column(db.Integer, db.ForeignKey('task.id'))
     student_id = db.Column(db.Integer, db.ForeignKey('student.id'))
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
-    text = db.Column(db.String)
+    text = db.Column(db.String(21000))
     score = db.Column(db.Integer)
+
+class Message(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    text = db.Column(db.String(2048), nullable=False)
+    task_id = db.Column(db.Integer, db.ForeignKey('task.id'))
+    student_alias = db.Column(db.String(32), nullable=True)
+    user_id = db.Column(db.Integer, nullable=True)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    name = db.Column(db.String(64), nullable=True)
 
 
 @login.user_loader

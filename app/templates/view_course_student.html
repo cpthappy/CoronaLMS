@@ -14,69 +14,83 @@
 {% block app_content %}
 <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
   <h1 class="display-4">{{course.title}}</h1>
+  <h6><a href="{{url_for('user', username=course.author.username)}}">{{course.author.username}}</a></h6>
   <p class="lead">{{course.description | truncate(140)}}</p>
 </div>
 
 {% if not student.email %}
-<div class="album py-5 bg-light">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-4">
-        <div class="card mb-4 shadow-sm">
-          <img class="card-img-top" alt="Persönliche Daten ändern">
-          <div class="card-body">
-            <form action="" method="post">
-              {{ form.hidden_tag() }}
-              <p>
-                {{ form.name.label }}<br>
-                {{ form.name(size=32) }}<br>
-                {% for error in form.name.errors %}
-                <span style="color: red;">[{{ error }}]</span>
-                {% endfor %}
-              </p>
-              <p>
-                {{ form.email.label }}<br>
-                {{ form.email(size=32) }}<br>
-                {% for error in form.email.errors %}
-                <span style="color: red;">[{{ error }}]</span>
-                {% endfor %}
-              </p>
-              <p>{{ form.submit() }}</p>
-            </form>
-          </div>
-        </div>
+
+<div class="container">
+  <div class="card-deck mb-3">
+
+    <div class="card mb-4 box-shadow">
+      <div class="card-header text-center">
+        <h2>Persönliche Daten ändern</h2>
       </div>
-    </div>
-    {% endif %}
-    <div class="container">
-      <div class="card-deck mb-3">
-        {% for task in tasks %}
-        <div class="card mb-4 box-shadow">
-          <div class="card-header text-center">
-            <h4 class="my-0 font-weight-normal">{{task.title}}</h4>
-          </div>
-          <div class="card-body">
-            <h6 class="card-subtitle mb-2 text-muted">
-              {% if task.max_score and not task.is_done %}
-                Maximale Punktzahl {{task.max_score}}<br>
-                {% endif %}
-                {% if task.due_date and not task.is_done%}
-              Abgabedatum {{task.due_date | datetime}}
-              {% endif %}
-            </h6>
-            <p class="card-text">{{ task.text |truncate(140) |markdown }}</p>
-          </div>
-         
-          {% if not task.is_done %}
-            <a class="btn btn-lg btn-block btn-primary" href="{{url_for('task', student_alias=student.alias, task_id=task.id)}}">Bearbeiten</a>
-          {% else %}
-            <a class="btn btn-lg btn-block btn-outline-primary" href="{{url_for('task', student_alias=student.alias, task_id=task.id)}}">Ansehen</a>
-          {% endif %}
-        </div>
+      <div class="card-body">
+        <form action="" method="post">
+          {{ form.hidden_tag() }}
+          <p>
+            {{ form.name.label }}<br>
+            {{ form.name(size=32) }}<br>
+            {% for error in form.name.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+          </p>
+          <p>
+            {{ form.email.label }}<br>
+            {{ form.email(size=32) }}<br>
+            {% for error in form.email.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+          </p>
+          <p>
+            <input type="checkbox" onchange="document.getElementById('submit').disabled = !this.checked;" name='visto'
+              id='visto' />
+            Ich habe die <a href="{{url_for('static', filename='html/Datenschutz_v1.html')}}"
+              target="_blank">Datenschutzerklärung</a> gelesen und erkläre mich damit einverstanden, dass meine
+            Daten
+            elektronisch verarbeitet und gespeichert werden.
+          </p>
+          <p>{{ form.submit(disabled="True") }}</p>
+        </form>
       </div>
-      {% endfor %}
     </div>
   </div>
 </div>
+{% endif %}
+<div class="container">
+  <div class="card-deck mb-3">
+    {% for task in tasks %}
+    {% if task.is_visible %}
+    <div class="card mb-4 box-shadow">
+      <div class="card-header text-center">
+        <h4 class="my-0 font-weight-normal">{{task.title}}</h4>
+      </div>
+      <div class="card-body">
+        <h6 class="card-subtitle mb-2 text-muted">
+          {% if task.max_score and not scores[task.id] %}
+          Maximale Punktzahl {{task.max_score}}<br>
+          {% elif scores[task.id] and task.max_score %}
+          Erreichte Punktzahl <b>{{scores[task.id]}}</b> von {{task.max_score}}<br>
+          {% endif %}
+          {% if task.due_date and not task.is_done%}
+          Abgabedatum {{task.due_date | datetime}}
+          {% endif %}
+        </h6>
+        <p class="card-text">{{ task.text |truncate(140) |markdown }}</p>
+      </div>
 
+      {% if not task.is_done %}
+      <a class="btn btn-lg btn-block btn-primary"
+        href="{{url_for('task', student_alias=student.alias, task_id=task.id)}}">Bearbeiten</a>
+      {% else %}
+      <a class="btn btn-lg btn-block btn-outline-primary"
+        href="{{url_for('task', student_alias=student.alias, task_id=task.id)}}">Ansehen</a>
+      {% endif %}
+    </div>
+    {% endif %}
+    {% endfor %}
+  </div>
+</div>
 {% endblock %}

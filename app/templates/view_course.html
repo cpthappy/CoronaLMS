@@ -20,7 +20,7 @@
 <div class="container"></div>
     <table class="table">
         {% for task in tasks %}
-        
+        {% if task.is_visible %}
         <tr>
             <th>
                 {{task.title}}
@@ -46,7 +46,7 @@
         <tr>
             <td colspan=4>{{ task.text |markdown }}</td>
         </tr>
-        
+        {% endif %}
         {% endfor %}
     </table>
 </div>

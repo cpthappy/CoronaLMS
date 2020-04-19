@@ -24,7 +24,7 @@
             {% endfor %}
         </p>
         <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
-        <p>{{ form.submit() }}</p>
+        <p>{{ form.submit(class="btn btn-primary") }}</p>
     </form>
     <p>Neuer Benutzer? <a href="{{ url_for('register') }}">Neu registrieren</a></p>
 </div>

@@ -1,15 +1,17 @@
 from datetime import datetime
-from flask import render_template, flash, redirect, url_for, request, send_from_directory
+from flask import render_template, flash, redirect, url_for, request, send_from_directory, make_response
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 from werkzeug.utils import secure_filename
-from app.models import User, Course, Task, Student, Submission, Feedback
+from app.models import User, Course, Task, Student, Submission, Feedback, Message
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, EditProfileForm, CourseForm, TaskForm,AddStudentForm, StudentForm, TaskWorkForm, FeedbackForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, CourseForm, TaskForm,AddStudentForm, StudentForm, TaskWorkForm, FeedbackForm, MessageForm
 from collections import Counter
 import os
 import uuid
 import babel
+import io
+import csv
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -39,6 +41,7 @@ def format_datetime(value, format='medium'):
 @login_required
 def index():
     courses = Course.query.filter_by(author = current_user)
+  
     return render_template("index.html", title='Startseite', courses=courses)
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -95,6 +98,7 @@ def edit_profile():
     if form.validate_on_submit():
         current_user.username = form.username.data
         current_user.about_me = form.about_me.data
+        current_user.show_email = form.show_mail.data
         current_user.institution = form.institution.data
         db.session.commit()
         flash('Ihre Änderungen wurden gespeichert.')
@@ -102,6 +106,7 @@ def edit_profile():
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.about_me.data = current_user.about_me
+        form.show_mail.data = current_user.show_email
         form.institution.data = current_user.institution
     return render_template('edit_profile.html', title='Profil bearbeiten',
                            form=form)
@@ -219,6 +224,39 @@ def close_task(course_id, task_id):
     flash('Aufgabe ' + title + ' als abgeschlossen markiert.')
     return redirect(url_for('manage_course', course_id=course_id))
 
+@app.route('/reopen_task/<course_id>/<task_id>')
+@login_required
+def reopen_task(course_id, task_id):
+    course = Course.query.filter_by(id = course_id, author = current_user).first_or_404()
+    task = Task.query.filter_by(id = task_id, course=course).first_or_404()
+    title = task.title
+    task.is_done = False
+    db.session.commit()
+    flash('Aufgabe ' + title + ' wurde wieder akiviert.')
+    return redirect(url_for('manage_course', course_id=course_id))
+
+@app.route('/hide_task/<course_id>/<task_id>')
+@login_required
+def hide_task(course_id, task_id):
+    course = Course.query.filter_by(id = course_id, author = current_user).first_or_404()
+    task = Task.query.filter_by(id = task_id, course=course).first_or_404()
+    title = task.title
+    task.is_visible = False
+    db.session.commit()
+    flash('Aufgabe ' + title + ' ist nicht mehr sichtbar für Teilnehmer.')
+    return redirect(url_for('manage_course', course_id=course_id))
+
+@app.route('/show_task/<course_id>/<task_id>')
+@login_required
+def show_task(course_id, task_id):
+    course = Course.query.filter_by(id = course_id, author = current_user).first_or_404()
+    task = Task.query.filter_by(id = task_id, course=course).first_or_404()
+    title = task.title
+    task.is_visible = True
+    db.session.commit()
+    flash('Aufgabe ' + title + ' ist jetzt sichtbar für Teilnehmer.')
+    return redirect(url_for('manage_course', course_id=course_id))
+
 @app.route('/edit_task/<course_id>/<task_id>', methods=['GET', 'POST'])
 @login_required
 def edit_task(course_id, task_id):
@@ -290,6 +328,10 @@ def work(student_alias):
     student = Student.query.filter_by(alias= student_alias).first_or_404()
     course = Course.query.filter_by(id = student.course_id).first_or_404()
     tasks = Task.query.filter_by(course = course).order_by("due_date")
+    feedback = Feedback.query.filter_by(student=student)
+    scores = dict()
+    for entry in feedback:
+        scores[entry.task_id] = entry.score
     student.last_seen = datetime.utcnow()
     db.session.commit()
 
@@ -301,37 +343,45 @@ def work(student_alias):
         form.email.data = student.email
         form.name.data = student.name
 
-    return render_template('view_course_student.html', course=course, tasks=tasks, student = student, form=form)
+    return render_template('view_course_student.html', course=course, tasks=tasks, student = student, form=form, scores=scores)
 
 @app.route('/task/<student_alias>/<task_id>', methods=['GET', 'POST'])
 def task(student_alias, task_id):
     form = TaskWorkForm()
+    form_message = MessageForm()
     student = Student.query.filter_by(alias= student_alias).first_or_404()
     task = Task.query.filter_by(id=task_id).first_or_404()
     submissions = Submission.query.filter_by(task_id=task.id, student_id=student.id)
+    feedback = Feedback.query.filter_by(task=task, student=student).one_or_none()
+    messages = Message.query.filter_by(task_id=task.id).order_by(Message.timestamp.desc())
     student.last_seen = datetime.utcnow()
     db.session.commit()
 
-    if form.validate_on_submit() and not task.is_done:
-        if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
-        file = request.files['file']
-        if file.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
-            original_filename = secure_filename(file.filename)
-            filename, file_extension = os.path.splitext(original_filename)
-            filename = str(uuid.uuid4())
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename + file_extension))
-            submission = Submission(student_id = student.id, task_id =task.id, filename=filename+file_extension, original_name=original_filename)
-            db.session.add(submission)
-            db.session.commit()
-            flash(original_filename + ' gespeichert.')
+    if form.submit.data and form.validate():
+        if not task.is_done:
+            if 'file' not in request.files:
+                flash('No file part')
+                return redirect(request.url)
+            file = request.files['file']
+            if file.filename == '':
+                flash('No selected file')
+                return redirect(request.url)
+            if file and allowed_file(file.filename):
+                original_filename = secure_filename(file.filename)
+                filename, file_extension = os.path.splitext(original_filename)
+                filename = str(uuid.uuid4())
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename + file_extension))
+                submission = Submission(student_id = student.id, task_id =task.id, filename=filename+file_extension, original_name=original_filename)
+                db.session.add(submission)
+                db.session.commit()
+                flash(original_filename + ' gespeichert.')
     else:
         pass
-    return render_template('view_task_student.html', task=task, student = student, submissions=submissions, form=form)
+    if form_message.submit_message.data and form_message.validate():
+        message = Message(text = form_message.text.data, student_alias=student.alias, task_id=task.id)
+        db.session.add(message)
+        db.session.commit()
+    return render_template('view_task_student.html', task=task, student = student, submissions=submissions, form=form, feedback=feedback, form_message = form_message, messages = messages)
 
 @app.route('/delete_submission/<student_alias>/<submission_id>/<task_id>')
 def delete_submission(student_alias, submission_id, task_id):
@@ -361,8 +411,9 @@ def feedback_submissions(course_id, task_id):
     task = Task.query.filter_by(id = task_id).first_or_404()
     submissions = Submission.query.filter_by(task_id = task.id).with_entities(Submission.student_id).distinct()
     submissions = Student.query.filter(Student.id.in_(submissions))
-    feedback = Feedback.query.filter_by(task_id=task.id).with_entities(Submission.student_id).distinct()
+    feedback = Feedback.query.filter_by(task_id=task.id).with_entities(Submission.student_id)
     feedback = Student.query.filter(Student.id.in_(feedback))
+
     return render_template('feedback_submissions.html', task=task, course = course, submissions=submissions, feedback=feedback)
 
 @app.route('/provide_feedback/<course_id>/<task_id>/<student_id>', methods=['GET', 'POST'])
@@ -392,3 +443,54 @@ def feedback_student(course_id, task_id, student_id):
         
     return render_template('feedback_student.html', form=form, task=task, course = course, student = student, submissions=submissions, feedback=feedback)
 
+@app.route('/report/<type>/<course_id>')
+@login_required
+def report(type, course_id):
+    course = Course.query.filter_by(id = course_id, author=current_user).first_or_404()
+    students = Student.query.filter_by(course = course)
+    si = io.StringIO()
+    cw = csv.writer(si)
+    if type == 'students':
+        cw.writerow(['Name', 'Alias', 'Zuletzt online', 'E-Mail', 'Link'])
+        cw.writerows([(x.name, x.alias, x.last_seen, x.email, app.config['DOMAIN']+'work/'+x.alias) for x in students])
+        
+    elif type == 'scores':
+        student_ids = Student.query.filter_by(course = course).with_entities(Student.id)
+        feedback = Feedback.query.with_entities(Feedback.student_id, Feedback.task_id, Feedback.score).filter(Feedback.student_id.in_(student_ids))
+        tasks = set()
+        results = {}
+        for student in students:
+            results[student.name] = {}
+            for f in feedback:
+                results[str(f.task_id)] = str(f.score)
+                tasks.add(str(f.task_id))
+        tasks = sorted(list(tasks))
+        header = ["Name"]
+        header.extend(tasks)
+        cw.writerow(header)
+        for entry in results:
+            values = results[entry]
+            cw.writerow([values[x] if x in values else '' for x in header])
+            
+    else:
+        return render_template('404.html'), 404
+    
+    response = make_response(si.getvalue())
+    response.headers['Content-Disposition'] = 'attachment; filename=report.csv'
+    response.headers["Content-type"] = "text/csv"
+    return response
+
+
+@app.route('/task_teacher/<course_id>/<task_id>', methods=['GET', 'POST'])
+@login_required
+def task_teacher(course_id, task_id):
+    form_message = MessageForm()
+    course = Course.query.filter_by(author= current_user, id=course_id).first_or_404()
+    task = Task.query.filter_by(id=task_id, course=course).first_or_404()
+    messages = Message.query.filter_by(task_id=task.id).order_by(Message.timestamp.desc())
+
+    if form_message.submit_message.data and form_message.validate():
+        message = Message(text = form_message.text.data, user_id=current_user.id, task_id=task.id)
+        db.session.add(message)
+        db.session.commit()
+    return render_template('view_task_teacher.html', task=task, course=course, form_message = form_message, messages = messages)

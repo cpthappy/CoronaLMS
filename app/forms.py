@@ -34,6 +34,7 @@ class EditProfileForm(FlaskForm):
     username = StringField('Benutzername', validators=[DataRequired()])
     about_me = TextAreaField('Über mich', validators=[Length(min=0, max=140)])
     institution = StringField('Insitution', validators = [Length(min=0, max=140)])
+    show_mail = BooleanField('E-Mail im Profil anzeigen')
     submit = SubmitField('Speichern')
 
     def __init__(self, original_username, *args, **kwargs):
@@ -75,3 +76,7 @@ class FeedbackForm(FlaskForm):
     text = TextAreaField('Feedback')
     score = IntegerField('Punktzahl')
     submit = SubmitField('Speichern')
+
+class MessageForm(FlaskForm):
+    text = TextAreaField('Lösung hochladen', validators=[DataRequired()])
+    submit_message = SubmitField('Abschicken')

@@ -22,7 +22,7 @@
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
-        <p>{{ form.submit() }} &nbsp; <a href="{{ url_for('index') }}">Abbrechen</a> </p>
+        <p>{{ form.submit(class="btn btn-primary") }} &nbsp; <a class="btn btn-outline-secondary" href="{{ url_for('index') }}">Abbrechen</a> </p>
     </form>
 </div>
 {% endblock %}

@@ -4,14 +4,18 @@
 <div class="container">
     <table>
         <tr valign="top">
-            <td><img src="{{ user.avatar(128) }}"></td>
+            <td></td>
             <td>
-                <h1>Benutzer: {{ user.username }}</h1>
+                <h1> {{ user.username }}</h1>
             </td>
         </tr>
         <tr>
             <td></td>
-            <td>{% if user.institution %}<p>{{ user.institution }}</p>{% endif %}</td>
+            <td>{% if user.institution %}<p>Schule: <b>{{ user.institution }}</b></p>{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>{% if user.show_email %}<p>E-Mail: <b>{{ user.email }}</b></p>{% endif %}</td>
         </tr>
         <tr>
             <td></td>

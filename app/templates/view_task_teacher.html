@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block head %}
+{{ super() }}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+    $(function () {
+        MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [
+                    ["$", "$"],
+                    ["\\(", "\\)"]
+                ]
+            }
+        });
+
+        var QUEUE = MathJax.Hub.queue;
+        var simplemde = new SimpleMDE({
+            element: document.getElementById("text"),
+            spellChecker: false,
+            previewRender: function (plainText) {
+                var preview = document.getElementsByClassName("editor-preview-side")[0];
+                preview.innerHTML = this.parent.markdown(plainText);
+                preview.setAttribute('id', 'editor-preview')
+                MathJax.Hub.Queue(["Typeset", MathJax.Hub, "editor-preview"]);
+                return preview.innerHTML;
+            },
+        });
+    })
+</script>
+{% endblock %}
+
+{% block app_content %}
+<div class="container">
+    <div class="m-1 p-1">
+        <h1>{{task.title}}</h1>
+
+        {% if task.max_score and not task.is_done%}
+        <h6>Maximale Punktzahl {{task.max_score}}</h6>
+        {% endif %}
+
+        {% if task.due_date and not task.is_done%}
+        <h6>Abgabedatum {{task.due_date | datetime}}</h6>
+        {% endif %}
+
+        <p>
+            <a href="{{url_for('manage_course',course_id=course.id)}}"><span class="fas fa-arrow-left"
+                    style="font-size:18pt"></span></a></p>
+        <p>
+            {{task.text | markdown}}
+        </p>
+    </div>
+
+</div>
+
+<div class="container">
+    <div class="m-1 p-1">
+        <h2>Fragen</h2>
+
+        <form action="" method="POST" enctype="multipart/form-data">
+            {{form_message.hidden_tag()}}
+            <p>
+                {{ form_message.text(rows=4, style="width: 100%") }}<br>
+                {% for error in form_message.text.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </p>
+
+            <p>{{ form_message.submit_message(class="btn btn-primary") }}</p>
+        </form>
+
+        {% for message in messages %}
+        {% if message.student_alias %}
+        <p class="border rounded bg-white">
+            {{message.text}}<br>
+            <small class="text-dark">{{message.timestamp|datetime}}</small></p>
+        {% else %}
+        <p class="border rounded bg-white text-primary">{{message.text}}<br>
+            <small class="text-dark">{{message.timestamp|datetime}}</small></p>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
