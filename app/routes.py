@@ -282,7 +282,7 @@ def edit_task(course_id, task_id):
 
 def add_students(number, course):
     aliases = [s.alias for s in Student.query.all()]
-    names = [s.name for s in Student.query.all()]
+    names = [s.name for s in Student.query.filter_by(course=course)]
     counter = 0
     for i in range(number):
         alias = ''
@@ -401,7 +401,7 @@ def missing_submissions(course_id, task_id):
     course = Course.query.filter_by(id = course_id, author = current_user).first_or_404()
     task = Task.query.filter_by(id = task_id).first_or_404()
     submissions = Submission.query.filter_by(task_id = task.id).with_entities(Submission.student_id)
-    missing_students = Student.query.filter(~Student.id.in_(submissions))
+    missing_students = Student.query.filter(~Student.id.in_(submissions)).filter_by(course = course)
     return render_template('missing_submissions.html', task=task, course = course, missing_students=missing_students)
 
 @app.route('/feedback/<course_id>/<task_id>')
