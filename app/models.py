@@ -92,7 +92,7 @@ class Feedback(db.Model):
     task_id = db.Column(db.Integer, db.ForeignKey('task.id'))
     student_id = db.Column(db.Integer, db.ForeignKey('student.id'))
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
-    text = db.Column(db.String)
+    text = db.Column(db.String(21000))
     score = db.Column(db.Integer)
 
 class Message(db.Model):
