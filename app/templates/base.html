@@ -6,7 +6,7 @@
 
 {% block head %}
 {{ super() }}
-{{ fontawesome_html() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='cssfont-awesome.min.css') }}">
 
 {% endblock %}
 
