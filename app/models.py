@@ -53,7 +53,7 @@ class Course(db.Model):
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(140), nullable=False)
-    text = db.Column(db.String(32768))
+    text = db.Column(db.String(21000))
     due_date = db.Column(db.DateTime)
     max_score = db.Column(db.Integer, nullable=True)
     is_done = db.Column(db.Boolean, default=False)
