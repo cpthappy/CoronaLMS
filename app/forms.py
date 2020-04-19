@@ -56,7 +56,7 @@ class TaskForm(FlaskForm):
     title = TextAreaField('Titel', validators=[DataRequired(), Length(min=1, max=140)])
     text = TextAreaField('Aufgabentext')
     due_date = DateField('Abgabedatum', validators=[Optional()])
-    max_score = TextField('Maximale Punktzahl', validators=[Optional()])
+    max_score = IntegerField('Maximale Punktzahl', validators=[Optional()])
     submit = SubmitField('Speichern')
 
 class AddStudentForm(FlaskForm):

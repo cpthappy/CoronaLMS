@@ -276,6 +276,7 @@ def edit_task(course_id, task_id):
         form.title.data = task.title
         form.text.data = task.text
         form.due_date.data = task.due_date 
+        form.max_score.data = task.max_score
 
     return render_template('add_task.html', title='Aufgabe bearbeiten', form=form, course=course)
 
