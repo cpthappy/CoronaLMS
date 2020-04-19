@@ -7,4 +7,5 @@ flask-sqlalchemy
 flask_bootstrap
 flask-markdown
 flask-pagedown
+python-dotenv
 babel
