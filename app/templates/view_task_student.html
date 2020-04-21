@@ -110,7 +110,7 @@
             <div class="border border-secondary rounded m-1 p-1">
                 <p>
                     <h2>Feedback: </h2>
-                    <p>{{feedback.text}}</p>
+                    <p>{{feedback.text | markdown}}</p>
                     {% if task.max_score %}
                     <p>Erreichte Punkte: <b>{{feedback.score}}</b> von {{task.max_score}}</p>
                     {% endif %}
