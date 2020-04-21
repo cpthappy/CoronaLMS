@@ -353,7 +353,7 @@ def task(student_alias, task_id):
     student = Student.query.filter_by(alias= student_alias).first_or_404()
     task = Task.query.filter_by(id=task_id).first_or_404()
     submissions = Submission.query.filter_by(task_id=task.id, student_id=student.id)
-    feedback = Feedback.query.filter_by(task_id=task, student_id=student_id).one_or_none()
+    feedback = Feedback.query.filter_by(task_id=task.id, student_id=student_id).one_or_none()
     messages = Message.query.filter_by(task_id=task.id).order_by(Message.timestamp.desc())
     student.last_seen = datetime.utcnow()
     db.session.commit()
@@ -425,7 +425,7 @@ def feedback_student(course_id, task_id, student_id):
     task = Task.query.filter_by(id = task_id).first_or_404()
     student = Student.query.filter_by(id=task_id).first_or_404()
     submissions = Submission.query.filter_by(task_id = task.id, student_id=student_id)
-    feedback = Feedback.query.filter_by(task=task, student=student).one_or_none()
+    feedback = Feedback.query.filter_by(task_id=task.id, student_id=student.id).one_or_none()
     form = FeedbackForm()
 
     if form.validate_on_submit():
