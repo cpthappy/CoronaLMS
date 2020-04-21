@@ -22,10 +22,10 @@
             <td>{{student.alias}}</td>
             <td>{{student.last_seen}}</td>
             <td><a href="{{url_for('feedback_student', task_id=task.id, course_id=course.id, student_id=student.id)}}">
-                    {% if not feedback[student.id] %}
-                    Bewertung vornehmen
-                    {% else %}
+                    {% if feedback[student.id] %}
                     Bewertung ändern
+                    {% else %}
+                    Bewertung vornehmen
                     {% endif %}
                 </a></td>
         </tr>
