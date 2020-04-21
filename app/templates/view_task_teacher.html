@@ -77,13 +77,20 @@
         </form>
 
         {% for message in messages %}
+
         {% if message.student_alias %}
         <p class="border rounded bg-white">
             {{message.text}}<br>
-            <small class="text-dark">{{message.timestamp|datetime}}</small></p>
+            <small class="text-dark">{{message.timestamp|datetime}}&nbsp; <a
+                    href="{{url_for('delete_message', course_id=course.id, task_id=task.id, message_id=message.id)}}"
+                    onclick="return confirm('Soll die Nachricht wirklich gelöscht werden?');"><span
+                        class="fas fa-trash-alt"></span></a></small></p>
         {% else %}
         <p class="border rounded bg-white text-primary">{{message.text}}<br>
-            <small class="text-dark">{{message.timestamp|datetime}}</small></p>
+            <small class="text-dark">{{message.timestamp|datetime}}&nbsp; <a
+                    href="{{url_for('delete_message', course_id=course.id, task_id=task.id, message_id=message.id)}}"
+                    onclick="return confirm('Soll die Nachricht wirklich gelöscht werden?');"><span
+                        class="fas fa-trash-alt"></span></a></small></p>
         {% endif %}
         {% endfor %}
     </div>

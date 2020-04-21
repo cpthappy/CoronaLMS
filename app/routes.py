@@ -382,6 +382,7 @@ def task(student_alias, task_id):
         message = Message(text = form_message.text.data, student_alias=student.alias, task_id=task.id)
         db.session.add(message)
         db.session.commit()
+        form_message.text.data = ""
     return render_template('view_task_student.html', task=task, student = student, submissions=submissions, form=form, feedback=feedback, form_message = form_message, messages = messages)
 
 @app.route('/delete_submission/<student_alias>/<submission_id>/<task_id>')
@@ -494,4 +495,16 @@ def task_teacher(course_id, task_id):
         message = Message(text = form_message.text.data, user_id=current_user.id, task_id=task.id)
         db.session.add(message)
         db.session.commit()
+
+    form_message.text.data = ''
     return render_template('view_task_teacher.html', task=task, course=course, form_message = form_message, messages = messages)
+
+@app.route('/delete_message/<course_id>/<task_id>/<message_id>')
+@login_required
+def delete_message(course_id, task_id, message_id):
+    course = Course.query.filter_by(id = course_id, author = current_user).first_or_404()
+    message = Message.query.filter_by(id = message_id).first_or_404()
+    db.session.delete(message)
+    db.session.commit()
+    
+    return redirect(url_for('task_teacher', course_id=course_id, task_id=task_id))
