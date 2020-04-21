@@ -423,7 +423,7 @@ def feedback_submissions(course_id, task_id):
 def feedback_student(course_id, task_id, student_id):
     course = Course.query.filter_by(id = course_id, author = current_user).first_or_404()
     task = Task.query.filter_by(id = task_id).first_or_404()
-    student = Student.query.filter_by(id=task_id).first_or_404()
+    student = Student.query.filter_by(id=student_id).first_or_404()
     submissions = Submission.query.filter_by(task_id = task.id, student_id=student_id)
     feedback = Feedback.query.filter_by(task_id=task.id, student_id=student.id).one_or_none()
     form = FeedbackForm()
