@@ -77,7 +77,7 @@ class Student(db.Model):
     scores = db.relationship('Feedback', backref='student', lazy='dynamic')
 
     def __repr__(self):
-        return '<Student {}>'.format(self.title)
+        return '<Student {}: {}>'.format(self.alias, self.scores)
 
 class Submission(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -94,6 +94,10 @@ class Feedback(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     text = db.Column(db.String(21000))
     score = db.Column(db.Integer)
+
+    def __repr__(self):
+        return '<Feedback {}: {}>'.format(self.student_id, self.score)
+
 
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)

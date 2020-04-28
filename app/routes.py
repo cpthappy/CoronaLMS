@@ -31,7 +31,7 @@ def before_request():
 @app.template_filter('datetime')
 def format_datetime(value, format='medium'):
     if format == 'full':
-        format="EEEE, d. MMMM y 'at' HH:mm"
+        format="EEEE, d. MMMM y 'um' HH:mm"
     elif format == 'medium':
         format="EE dd.MM.y"
     return babel.dates.format_datetime(value, format)
@@ -411,6 +411,10 @@ def missing_submissions(course_id, task_id):
 def feedback_submissions(course_id, task_id):
     course = Course.query.filter_by(id = course_id, author = current_user).first_or_404()
     task = Task.query.filter_by(id = task_id).first_or_404()
+    feedback = Student.query.filter_by(course_id = course_id).join(Feedback).filter_by(task_id=task_id)
+    for f in feedback:
+        print(f.feedback_id)
+        print(f.student_id)
     submissions = Submission.query.filter_by(task_id = task.id).with_entities(Submission.student_id).distinct()
     submissions = Student.query.filter(Student.id.in_(submissions))
     feedback = Feedback.query.filter_by(task_id=task.id).with_entities(Submission.student_id)

@@ -41,7 +41,7 @@
         <h6>Maximale Punktzahl {{task.max_score}}</h6>
         {% endif %}
         {% if task.due_date and not task.is_done%}
-        <h6>Abgabedatum {{task.due_date | datetime}}</h6>
+        <h6>Abgabedatum {{task.due_date | datetime('full')}}</h6>
         {% endif %}
         <p>
             <a href="{{url_for('manage_course',course_id=course.id)}}"><span class="fas fa-arrow-left"

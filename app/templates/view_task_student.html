@@ -145,10 +145,10 @@
             {% if message.student_alias %}
             <p class="border rounded bg-white">
                 {{message.text}}<br>
-                <small class="text-dark">{{message.timestamp|datetime}}</small></p>
+                <small class="text-dark">{{message.timestamp|datetime('full')}}</small></p>
             {% else %}
             <p class="border rounded bg-white text-primary">{{message.text}}<br>
-                <small class="text-dark">{{message.timestamp|datetime}}</small></p>
+                <small class="text-dark">{{message.timestamp|datetime('full')}}</small></p>
             {% endif %}
             {% endfor %}
         </div>
