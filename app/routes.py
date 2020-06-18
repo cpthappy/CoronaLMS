@@ -411,14 +411,17 @@ def missing_submissions(course_id, task_id):
 def feedback_submissions(course_id, task_id):
     course = Course.query.filter_by(id = course_id, author = current_user).first_or_404()
     task = Task.query.filter_by(id = task_id).first_or_404()
-    feedback = Student.query.filter_by(course_id = course_id).join(Feedback).filter_by(task_id=task_id)
-    for f in feedback:
-        print(f.feedback_id)
-        print(f.student_id)
+    # session.query(Work).\
+    #join(Work.company_users).\
+    # join(CompanyUser.user).\
+    # options(contains_eager(Work.company_users).
+    #         contains_eager(CompanyUser.user)).\
+    # filter(Work.id == 1).\
+    # filter(User.first_name == 'The name').\
+    # all()
+    feedback = db.session.query(Student).join(Feedback).filter(Student.course_id == course_id).filter(Feedback.task_id == task_id).with_entities(Student.name, Student.alias, Student.email, Feedback.score).all()
     submissions = Submission.query.filter_by(task_id = task.id).with_entities(Submission.student_id).distinct()
     submissions = Student.query.filter(Student.id.in_(submissions))
-    feedback = Feedback.query.filter_by(task_id=task.id).with_entities(Submission.student_id)
-    feedback = Student.query.filter(Student.id.in_(feedback))
 
     return render_template('feedback_submissions.html', task=task, course = course, submissions=submissions, feedback=feedback)
 
